@@ -69,7 +69,7 @@ extension View {
     /// iOS 16 上滚动过渡 API 不存在，直接返回原视图（不影响布局与命中）。
     @ViewBuilder
     func gcScrollFade(
-        axis: Axis.Set = .vertical,
+        axis: Axis = .vertical,
         minOpacity: Double = 0.6,
         minScale: CGFloat = 0.98
     ) -> some View {
