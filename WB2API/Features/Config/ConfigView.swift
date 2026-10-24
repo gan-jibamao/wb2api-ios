@@ -67,7 +67,7 @@ struct ConfigView: View {
         .refreshable { await load() }
         .task { await load() }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 if isSaving {
                     ProgressView()
                         .accessibilityLabel("正在保存")

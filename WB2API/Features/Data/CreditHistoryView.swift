@@ -63,7 +63,7 @@ struct CreditHistoryView: View {
         .refreshable { await load(syncUpstream: true) }
         .task { await load() }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button("刷新", systemImage: "arrow.clockwise") {
                     Task { await load(syncUpstream: true) }
                 }

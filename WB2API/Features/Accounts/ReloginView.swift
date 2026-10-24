@@ -52,7 +52,7 @@ struct ReloginView: View {
             .navigationTitle("重新登录")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .navigationBarLeading) {
                     Button("关闭") { dismiss() }
                 }
             }

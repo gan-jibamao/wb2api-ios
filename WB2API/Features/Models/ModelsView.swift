@@ -60,11 +60,11 @@ struct ModelsView: View {
             ModelDetailView(model: model)
         }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button("模型探测", systemImage: "waveform.path.ecg", action: openProbes)
                     .labelStyle(.iconOnly)
             }
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button("刷新", systemImage: "arrow.clockwise", action: refresh)
                     .labelStyle(.iconOnly)
             }

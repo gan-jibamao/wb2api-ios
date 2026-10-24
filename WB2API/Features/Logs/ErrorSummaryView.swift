@@ -52,7 +52,7 @@ struct ErrorSummaryView: View {
         .navigationBarTitleDisplayMode(.inline)
         .refreshable { await refresh() }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button("刷新", systemImage: "arrow.clockwise", action: refreshNow)
                     .labelStyle(.iconOnly)
             }

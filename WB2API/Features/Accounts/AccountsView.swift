@@ -33,7 +33,7 @@ struct AccountsView: View {
                 AccountDetailView(account: account)
             }
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink {
                         LogsView()
                     } label: {
@@ -41,10 +41,10 @@ struct AccountsView: View {
                     }
                     .labelStyle(.iconOnly)
                 }
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .navigationBarTrailing) {
                     filterMenu
                 }
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .navigationBarTrailing) {
                     // 不 disable：轮询期间点击也要能强制重发，转圈只是反馈
                     Button(action: reload) {
                         if model.isLoading || model.isReloading {

@@ -64,6 +64,27 @@ extension View {
     }
 }
 
+extension View {
+    /// 等价于 iOS 17 的 `.scrollTransition(.interactive, axis:)` 淡入淡出。
+    /// iOS 16 上滚动过渡 API 不存在，直接返回原视图（不影响布局与命中）。
+    @ViewBuilder
+    func gcScrollFade(
+        axis: Axis.Set = .vertical,
+        minOpacity: Double = 0.6,
+        minScale: CGFloat = 0.98
+    ) -> some View {
+        if #available(iOS 17.0, *) {
+            self.scrollTransition(.interactive, axis: axis) { content, phase in
+                content
+                    .opacity(phase.isIdentity ? 1 : minOpacity)
+                    .scaleEffect(phase.isIdentity ? 1 : minScale)
+            }
+        } else {
+            self
+        }
+    }
+}
+
 /// iOS 16 上没有 symbolEffect，用透明度呼吸近似 pulse。
 private struct GCPulseFallback: ViewModifier {
     let active: Bool

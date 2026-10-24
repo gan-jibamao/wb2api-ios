@@ -48,11 +48,7 @@ struct DataView: View {
                                 groups: dimension.groups(in: snapshot)
                             )
                             .staggeredAppear(index: 1)
-                            .scrollTransition(.interactive, axis: .vertical) { content, phase in
-                                content
-                                    .opacity(phase.isIdentity ? 1 : 0.6)
-                                    .scaleEffect(phase.isIdentity ? 1 : 0.98)
-                            }
+                            .gcScrollFade(minOpacity: 0.6, minScale: 0.98)
                         }
 
                         DataHistoryLinks()
@@ -75,7 +71,7 @@ struct DataView: View {
             .refreshable { await load() }
             .task { await load() }
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .navigationBarTrailing) {
                     Button("刷新", systemImage: "arrow.clockwise", action: refresh)
                         .disabled(loader.isLoading)
                 }

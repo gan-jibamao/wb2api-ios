@@ -94,7 +94,7 @@ struct LogsView: View {
         }
         .refreshable { await refreshLogs() }
         .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
                 NavigationLink(value: LogsRoute.requestLogs) {
                     Label("请求日志", systemImage: "arrow.left.arrow.right")
                 }

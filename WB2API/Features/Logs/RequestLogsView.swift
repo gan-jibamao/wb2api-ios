@@ -58,7 +58,7 @@ struct RequestLogsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .refreshable { await refreshAll() }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button("刷新", systemImage: "arrow.clockwise", action: refresh)
                     .labelStyle(.iconOnly)
             }
