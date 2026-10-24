@@ -110,21 +110,21 @@ jobs:
           set -euo pipefail
           BIN=$(find .build/Build/Products/Release-iphoneos -maxdepth 3 -name WB2API -type f | head -1)
           echo "binary: $BIN"
-          llvm-otool -l "$BIN" | grep -A4 'LC_BUILD_VERSION' || true
+          xcrun otool -l "$BIN" | grep -A4 'LC_BUILD_VERSION' || true
           echo "--- linked ---"
-          llvm-otool -L "$BIN"
+          xcrun otool -L "$BIN"
 
-          MINOS=$(llvm-otool -l "$BIN" | awk '/LC_BUILD_VERSION/{f=1} f&&/minos/{print $2; exit}')
+          MINOS=$(xcrun otool -l "$BIN" | awk '/LC_BUILD_VERSION/{f=1} f&&/minos/{print $2; exit}')
           echo "minos=$MINOS"
           if [ "$MINOS" != "16.0" ]; then
             echo "::error::minos 应为 16.0，实际 $MINOS"
             exit 1
           fi
-          if llvm-otool -L "$BIN" | grep -q 'Symbols.framework'; then
+          if xcrun otool -L "$BIN" | grep -q 'Symbols.framework'; then
             echo "::error::仍强链接 Symbols.framework（iOS 26 独有），iOS 16 会启动崩溃"
             exit 1
           fi
-          if llvm-otool -L "$BIN" | grep -q 'libswiftObservation'; then
+          if xcrun otool -L "$BIN" | grep -q 'libswiftObservation'; then
             echo "::error::仍强链接 libswiftObservation.dylib（iOS 17 独有）"
             exit 1
           fi
