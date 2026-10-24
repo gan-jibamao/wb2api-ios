@@ -30,6 +30,6 @@ struct DataHistoryRow: View {
         }
         .padding(Metrics.m)
         .frame(minHeight: Metrics.minTap)
-        .contentShape(.rect)
+        .contentShape(Rectangle())
     }
 }

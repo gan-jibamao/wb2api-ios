@@ -183,9 +183,10 @@ struct AccountDetailView: View {
             guard removed else { return }
             withAnimation(Motion.emphasized) {
                 isLeaving = true
-            } completion: {
-                dismiss()
             }
+            // iOS 16 没有 withAnimation 的 completion 重载：按动画时长等一拍再退出。
+            try? await Task.sleep(for: .milliseconds(450))
+            dismiss()
         }
     }
 }
