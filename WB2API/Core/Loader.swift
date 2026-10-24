@@ -1,14 +1,17 @@
 import Foundation
-import Observation
+import Combine
 
 /// 通用加载器：统一 isLoading / error / value 三态，避免每个页面重写一遍。
+/// iOS 16 兼容：`@Observable`（iOS 17+）改为 `ObservableObject`。
 @MainActor
-@Observable
-final class Loader<Value> {
-    private(set) var value: Value?
-    private(set) var error: String?
-    private(set) var isLoading = false
-    private(set) var lastUpdated: Date?
+final class Loader<Value>: ObservableObject {
+    @Published private(set) var value: Value? { didSet { onChange?() } }
+    @Published private(set) var error: String? { didSet { onChange?() } }
+    @Published private(set) var isLoading = false { didSet { onChange?() } }
+    @Published private(set) var lastUpdated: Date? { didSet { onChange?() } }
+
+    /// 被其他 ObservableObject 持有时，把内层变化转发给外层，否则页面不会刷新。
+    var onChange: (@MainActor () -> Void)?
 
     var isEmpty: Bool { value == nil && error == nil }
 

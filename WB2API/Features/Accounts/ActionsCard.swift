@@ -39,7 +39,7 @@ struct ActionsCard: View {
                         .font(.subheadline)
                         .frame(maxWidth: .infinity, minHeight: Metrics.minTap)
                     }
-                    .buttonStyle(.glass)
+                    .buttonStyle(.gcGlass)
                     .controlSize(.large)
                     .disabled(busy != nil)
                     .accessibilityHint(command.hint)
@@ -53,7 +53,7 @@ struct ActionsCard: View {
                     .font(.subheadline)
                     .frame(maxWidth: .infinity, minHeight: Metrics.minTap)
             }
-            .buttonStyle(.glass)
+            .buttonStyle(.gcGlass)
             .tint(.red)
             .controlSize(.large)
             .disabled(busy != nil)

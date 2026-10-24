@@ -2,13 +2,13 @@ import SwiftUI
 
 /// 任务：队列状态 + 批量操作 + 扫描结果（逐账号/逐任务勾选）+ 作业列表。
 struct TasksView: View {
-    @Environment(SessionStore.self) private var session
+    @EnvironmentObject private var session: SessionStore
 
-    @State private var queue = Loader<TaskQueue>()
-    @State private var jobs = Loader<JSONValue>()
+    @StateObject private var queue = Loader<TaskQueue>()
+    @StateObject private var jobs = Loader<JSONValue>()
     @State private var scannedTasks: [AccountTask] = []
     @State private var selected: Set<String> = []
-    @State private var runner = TaskRunController()
+    @StateObject private var runner = TaskRunController()
     @State private var busyTaskID: String?
     @State private var isScanning = false
     @State private var isRunning = false
@@ -91,7 +91,7 @@ struct TasksView: View {
                         .controlSize(.small)
                     Text("执行中 \(runner.progressText)")
                         .font(.footnote.bold())
-                        .contentTransition(.numericText())
+                        .gcNumericText()
                     if runner.failureCount > 0 {
                         Text("失败 \(runner.failureCount)")
                             .font(.caption)
@@ -100,11 +100,11 @@ struct TasksView: View {
                     Spacer()
                     Button("停止") { runner.stop() }
                         .font(.footnote.bold())
-                        .buttonStyle(.glass)
+                        .buttonStyle(.gcGlass)
                 } else {
                     Text("已选 \(selected.count) 项")
                         .font(.footnote.bold())
-                        .contentTransition(.numericText())
+                        .gcNumericText()
                     Spacer()
                     Button("清空") { selected.removeAll() }
                         .font(.footnote)
@@ -116,16 +116,16 @@ struct TasksView: View {
                         Label("执行选中", systemImage: "play.fill")
                     }
                     .font(.footnote.bold())
-                    .buttonStyle(.glassProminent)
+                    .buttonStyle(.gcGlassProminent)
                 }
             }
             .padding(.horizontal, Metrics.m)
             .padding(.vertical, Metrics.s)
-            .glassEffect(.regular, in: .capsule)
+            .gcGlass(.regular, in: .capsule)
             .padding(.horizontal, Metrics.m)
             .padding(.bottom, Metrics.s)
             .transition(.move(edge: .bottom).combined(with: .opacity))
-            .animation(.snappy, value: selected.count)
+            .animation(Motion.spring, value: selected.count)
         }
     }
 
@@ -201,7 +201,7 @@ struct TasksView: View {
                     let pending = raw.objectValue?["pending_count"]?.intValue ?? scannedTasks.count
                     toast = Toast(kind: .success, text: "扫描完成：\(pending) 项待办")
                 }
-                withAnimation(.snappy) { /* 列表入场 */ }
+                withAnimation(Motion.spring) { /* 列表入场 */ }
             } catch {
                 guard !error.isCancellation else { return }
                 toast = Toast(kind: .failure, text: "扫描失败：\(error.humanMessage)")

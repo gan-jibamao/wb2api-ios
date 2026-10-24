@@ -1,11 +1,12 @@
 import SwiftUI
 
 /// 动效 token。硬规则：所有动画必须带 `value:`；Reduce Motion 下退化为 opacity。
+/// iOS 16 没有 `Motion.spring/smooth/bouncy`，这里用等价 spring / easeInOut 表达。
 enum Motion {
-    static let spring = Animation.snappy(duration: 0.28)
+    static let spring = Animation.spring(response: 0.28, dampingFraction: 0.86)
     static let snappy = spring  // 别名：部分视图按名字直取
-    static let emphasized = Animation.bouncy(duration: 0.45)
-    static let numeric = Animation.smooth(duration: 0.35)
+    static let emphasized = Animation.spring(response: 0.45, dampingFraction: 0.62)
+    static let numeric = Animation.easeInOut(duration: 0.35)
     static let gentle = Animation.easeOut(duration: 0.22)
 
     /// 错峰入场延迟（索引 × 40ms，封顶 240ms）

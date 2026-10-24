@@ -23,7 +23,7 @@ struct CreditsCard: View {
                 Text(Fmt.credits(account.credits))
                     .font(.metric(.largeTitle))
                     .foregroundStyle(Accent.primary)
-                    .contentTransition(.numericText())
+                    .gcNumericText()
                     .lineLimit(1)
                     .minimumScaleFactor(0.55)
 

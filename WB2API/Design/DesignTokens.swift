@@ -66,18 +66,18 @@ extension Font {
     static var tag: Font { .caption.weight(.medium) }
 }
 
-// MARK: - 玻璃容器（iOS 26 Liquid Glass 的统一入口）
+// MARK: - 卡片容器（iOS 16 起统一走扁平卡片，见 Compat/CompatSurface.swift）
 
 extension View {
-    /// 常规玻璃卡片：用于内容分组。
+    /// 常规卡片：用于内容分组。
     func glassCard(padding: CGFloat = Metrics.m, cornerRadius: CGFloat = Metrics.radiusL) -> some View {
         self
             .padding(padding)
-            .glassEffect(.regular, in: .rect(cornerRadius: cornerRadius))
+            .gcGlass(.regular, in: .rect(cornerRadius))
     }
 
-    /// 可交互玻璃（按钮组、控件）：带高亮响应。
+    /// 可交互卡片（按钮组、控件）：带命中形状。
     func glassInteractive(cornerRadius: CGFloat = Metrics.radiusM) -> some View {
-        self.glassEffect(.regular.interactive(), in: .rect(cornerRadius: cornerRadius))
+        self.gcGlass(.regular.interactive(), in: .rect(cornerRadius))
     }
 }

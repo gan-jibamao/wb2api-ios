@@ -17,7 +17,7 @@ struct DetailRow: View {
             Text(value)
                 .monospacedDigit()
                 .multilineTextAlignment(.trailing)
-                .contentTransition(.numericText())
+                .gcNumericText()
         } label: {
             if let systemImage {
                 Label(title, systemImage: systemImage)

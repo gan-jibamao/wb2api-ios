@@ -94,7 +94,7 @@ struct UsageRangeSummaryCard: View {
                     Text(Fmt.tokens(tokens))
                         .font(.system(size: 40, weight: .semibold, design: .rounded))
                         .monospacedDigit()
-                        .contentTransition(.numericText())
+                        .gcNumericText()
                         .lineLimit(1)
                         .minimumScaleFactor(0.6)
                     Text("tokens")

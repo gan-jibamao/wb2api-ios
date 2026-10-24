@@ -2,8 +2,8 @@ import SwiftUI
 
 /// 配置：按顶层 key 分组的原生表单 + 高级 JSON 编辑。
 struct ConfigView: View {
-    @Environment(SessionStore.self) private var session
-    @State private var editor = ConfigEditor()
+    @EnvironmentObject private var session: SessionStore
+    @StateObject private var editor = ConfigEditor()
     @State private var isLoading = false
     @State private var errorText: String?
     @State private var isSaving = false
@@ -23,7 +23,7 @@ struct ConfigView: View {
                     LoadingSkeleton(rows: 6)
                 }
             } else if !editor.isLoaded {
-                ContentUnavailableView {
+                GCContentUnavailableView {
                     Label("配置未加载", systemImage: "slider.horizontal.3")
                 } description: {
                     Text("下拉刷新重新获取面板配置。")
@@ -130,9 +130,11 @@ struct ConfigView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        ConfigView()
+struct ConfigView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            ConfigView()
     }
-    .environment(SessionStore())
+    .environmentObject(SessionStore())
+    }
 }

@@ -114,7 +114,9 @@ struct MoreView: View {
     }
 }
 
-#Preview {
-    MoreView()
-        .environment(SessionStore())
+struct MoreView_Previews: PreviewProvider {
+    static var previews: some View {
+        MoreView()
+            .environmentObject(SessionStore())
+    }
 }

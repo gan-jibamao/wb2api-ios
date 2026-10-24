@@ -1,8 +1,8 @@
 # WB2API iOS
 
 [![CI](https://github.com/chenyynx/wb2api-ios/actions/workflows/ci.yml/badge.svg)](https://github.com/chenyynx/wb2api-ios/actions/workflows/ci.yml)
-![Platform](https://img.shields.io/badge/iOS-26.0%2B-blue)
-![Swift](https://img.shields.io/badge/Swift-6.0-orange)
+![Platform](https://img.shields.io/badge/iOS-16.0%2B-blue)
+![Swift](https://img.shields.io/badge/Swift-5.0-orange)
 ![License](https://img.shields.io/badge/license-MIT-green)
 [![Download](https://img.shields.io/badge/download-latest%20IPA-blue)](https://github.com/chenyynx/wb2api-ios/releases/latest)
 
@@ -85,6 +85,39 @@ xcodebuild test -project WB2API.xcodeproj -scheme WB2API \
 
 - 最新安装包：[Releases](https://github.com/chenyynx/wb2api-ios/releases/latest)（未签名 IPA，重签后安装）。
 - 每次推送触发两条流水线：模拟器单元测试、无签名 IPA 构建。
+- 产物在 Actions 页面的 `WB2API-unsigned-ipa` artifact 中，使用全能签 / SideStore / AltStore 等工具重签后安装。
+- Bundle ID：`org.example.wb2api`。
+
+## 目录外的辅助脚本
+
+| 脚本 | 用途 |
+|---|---|
+| `tools/check_models.py` | 模型与真实响应逐字段对拍 |
+| `tools/sanitize_fixtures.py` | 生成脱敏测试夹具 |
+| `tools/ci_errors.py` | 从 CI 日志提取编译错误 |
+| `tools/make_icon_dog.py` | 由 Phosphor 图标生成 App 图标 |
+
+## 安全与隐私
+
+- 凭据只存本机 Keychain；仓库、测试夹具、CI 日志均不含明文密钥。
+- 应用仅与你自行部署的面板通信，不包含统计、埋点或第三方 SDK。
+- 移除账号、禁用账号、批量操作等写操作需二次确认，避免误触。
+
+## 参与贡献
+
+- 提交前请确保 `xcodebuild test` 通过；CI 会对推送和 PR 执行同样的检查。
+- 代码约定：一类型一文件；`body` 中不写业务逻辑，抽成独立视图或方法；不使用强制解包；异步任务需处理取消。
+- 提交信息使用祈使句，说明改动原因而不是罗列文件。
+
+## 相关项目
+
+- [workbuddy2api-panel](https://github.com/misakano7545/workbuddy2api-panel)：后端面板，账号池网关与运维界面，本 App 的服务端。
+
+## 许可与素材
+
+- 代码：[MIT](LICENSE)
+- App 图标：改编自 [Phosphor Icons](https://github.com/phosphor-icons/core) 的 `dog-fill`（MIT），生成脚本 `tools/make_icon_dog.py`
+��元测试、无签名 IPA 构建。
 - 产物在 Actions 页面的 `WB2API-unsigned-ipa` artifact 中，使用全能签 / SideStore / AltStore 等工具重签后安装。
 - Bundle ID：`org.example.wb2api`。
 

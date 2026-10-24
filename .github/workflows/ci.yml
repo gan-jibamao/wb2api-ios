@@ -17,21 +17,30 @@ jobs:
       - name: 安装 XcodeGen
         run: brew install xcodegen
 
+      - name: 选择 Xcode 16（iOS 18 SDK）
+        run: |
+          # 必须用 iOS 18 SDK 编译：iOS 26 SDK 会把 Symbols.framework 强链接进二进制，
+          # 在 iOS 16/17/18 上 dyld 直接 "Library not loaded" 拒绝启动。
+          for v in 16.4 16.3 16.2 16.1 16.0; do
+            P="/Applications/Xcode_${v}.app"
+            if [ -d "$P" ]; then sudo xcode-select -s "$P"; echo "使用 $P"; break; fi
+          done
+          if ! xcode-select -p | grep -q 'Xcode_16'; then
+            echo "::error::runner 上没有 Xcode 16.x，无法产出兼容 iOS 16 的包"
+            ls -d /Applications/Xcode*.app || true
+            exit 1
+          fi
+          xcodebuild -version
+
       - name: 生成工程
         run: xcodegen generate
-
-      - name: 选择最新 Xcode（需要 iOS 26 SDK）
-        run: |
-          CANDIDATE=$(ls -d /Applications/Xcode*.app | sort -V | tail -1)
-          echo "使用 $CANDIDATE"
-          sudo xcode-select -s "$CANDIDATE"
-          xcodebuild -version
 
       - name: 运行测试
         run: |
           set -o pipefail
-          # runner 的可用模拟器随 Xcode 版本变化，动态探测，失败时列出全部设备辅助排查
-          DEST=$(xcrun simctl list devices available | grep -m1 -E "iPhone" | sed -E 's/^[[:space:]]*([^(]+) \(([0-9A-F-]+)\).*/\1/')
+          DEST=$(xcrun simctl list devices available \
+            | sed -n 's/^[[:space:]]*\(iPhone[^(]*\) ([0-9A-F-]\{36\}).*/\1/p' \
+            | head -1 | sed 's/[[:space:]]*$//')
           if [ -z "$DEST" ]; then
             echo "无可用模拟器，设备列表："
             xcrun simctl list devices available
@@ -65,15 +74,21 @@ jobs:
       - name: 安装 XcodeGen
         run: brew install xcodegen
 
+      - name: 选择 Xcode 16（iOS 18 SDK）
+        run: |
+          for v in 16.4 16.3 16.2 16.1 16.0; do
+            P="/Applications/Xcode_${v}.app"
+            if [ -d "$P" ]; then sudo xcode-select -s "$P"; echo "使用 $P"; break; fi
+          done
+          if ! xcode-select -p | grep -q 'Xcode_16'; then
+            echo "::error::runner 上没有 Xcode 16.x"
+            ls -d /Applications/Xcode*.app || true
+            exit 1
+          fi
+          xcodebuild -version
+
       - name: 生成工程
         run: xcodegen generate
-
-      - name: 选择最新 Xcode（需要 iOS 26 SDK）
-        run: |
-          CANDIDATE=$(ls -d /Applications/Xcode*.app | sort -V | tail -1)
-          echo "使用 $CANDIDATE"
-          sudo xcode-select -s "$CANDIDATE"
-          xcodebuild -version
 
       - name: 编译真机包（未签名）
         run: |
@@ -90,6 +105,30 @@ jobs:
             CODE_SIGN_ENTITLEMENTS="" \
             | tee /tmp/build.log | tail -40
 
+      - name: 兼容性门禁（minos / 系统框架）
+        run: |
+          set -euo pipefail
+          BIN=$(find .build/Build/Products/Release-iphoneos -maxdepth 3 -name WB2API -type f | head -1)
+          echo "binary: $BIN"
+          llvm-otool -l "$BIN" | grep -A4 'LC_BUILD_VERSION' || true
+          echo "--- linked ---"
+          llvm-otool -L "$BIN"
+
+          MINOS=$(llvm-otool -l "$BIN" | awk '/LC_BUILD_VERSION/{f=1} f&&/minos/{print $2; exit}')
+          echo "minos=$MINOS"
+          if [ "$MINOS" != "16.0" ]; then
+            echo "::error::minos 应为 16.0，实际 $MINOS"
+            exit 1
+          fi
+          if llvm-otool -L "$BIN" | grep -q 'Symbols.framework'; then
+            echo "::error::仍强链接 Symbols.framework（iOS 26 独有），iOS 16 会启动崩溃"
+            exit 1
+          fi
+          if llvm-otool -L "$BIN" | grep -q 'libswiftObservation'; then
+            echo "::error::仍强链接 libswiftObservation.dylib（iOS 17 独有）"
+            exit 1
+          fi
+
       - name: 打包 IPA
         run: |
           set -euo pipefail
@@ -100,12 +139,15 @@ jobs:
           rm -rf /tmp/ipa/Payload/*.app/_CodeSignature || true
           cd /tmp/ipa && zip -qry WB2API-unsigned.ipa Payload
           ls -lh WB2API-unsigned.ipa
+          shasum -a 256 WB2API-unsigned.ipa | tee WB2API-unsigned.ipa.sha256
 
       - name: 上传产物
         uses: actions/upload-artifact@v4
         with:
           name: WB2API-unsigned-ipa
-          path: /tmp/ipa/WB2API-unsigned.ipa
+          path: |
+            /tmp/ipa/WB2API-unsigned.ipa
+            /tmp/ipa/WB2API-unsigned.ipa.sha256
           retention-days: 14
 
       - name: 编译失败时上传日志

@@ -45,17 +45,19 @@ struct LogRowView: View {
     }
 }
 
-#Preview {
-    List {
-        LogRowView(entry: LogEntry(
-            ts: "2026-10-23T19:30:06.207383914+08:00",
-            ch: "sys",
-            text: "WARN: [pool] fallback_earliest_expiry acct=账号J(a1b2c3d4) until=2026-10-23T19:35:38+08:00 kind=soft"
-        ))
-        LogRowView(entry: LogEntry(
-            ts: "2026-10-23T19:30:48.766662984+08:00",
-            ch: "chat",
-            text: "| #001 | 19:30:48 | deepseek-v4.1-flash | stream | 503 | 账号J(a1b2c3d4) | TTFB=- | tok=- | total=1.3s"
-        ))
+struct LogRowView_Previews: PreviewProvider {
+    static var previews: some View {
+        List {
+            LogRowView(entry: LogEntry(
+                ts: "2026-10-23T19:30:06.207383914+08:00",
+                ch: "sys",
+                text: "WARN: [pool] fallback_earliest_expiry acct=账号J(a1b2c3d4) until=2026-10-23T19:35:38+08:00 kind=soft"
+            ))
+            LogRowView(entry: LogEntry(
+                ts: "2026-10-23T19:30:48.766662984+08:00",
+                ch: "chat",
+                text: "| #001 | 19:30:48 | deepseek-v4.1-flash | stream | 503 | 账号J(a1b2c3d4) | TTFB=- | tok=- | total=1.3s"
+            ))
+    }
     }
 }

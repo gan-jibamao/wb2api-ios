@@ -2,7 +2,7 @@ import SwiftUI
 
 /// 设置：服务器地址、访问密钥、连接测试、关于与退出登录。
 struct SettingsView: View {
-    @Environment(SessionStore.self) private var session
+    @EnvironmentObject private var session: SessionStore
 
     @State private var keyDraft = ""
     @State private var isTesting = false
@@ -20,7 +20,6 @@ struct SettingsView: View {
     }
 
     var body: some View {
-        @Bindable var session = session
 
         Form {
             Section {
@@ -67,7 +66,7 @@ struct SettingsView: View {
                     Label(testMessage, systemImage: testPassed ? "checkmark.circle.fill" : "xmark.octagon.fill")
                         .font(.footnote)
                         .foregroundStyle(testPassed ? Color.green : Color.red)
-                        .symbolEffect(.bounce, value: testPassed)
+                        .gcSymbolEffect(.bounce, value: testPassed)
                 }
             } header: {
                 Text("诊断")
@@ -161,9 +160,11 @@ struct SettingsView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        SettingsView()
+struct SettingsView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            SettingsView()
     }
-    .environment(SessionStore())
+    .environmentObject(SessionStore())
+    }
 }

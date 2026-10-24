@@ -63,7 +63,7 @@ struct AboutView: View {
                         .textSelection(.enabled)
                         .padding(Metrics.s)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(.quaternary.opacity(0.5), in: .rect(cornerRadius: Metrics.radiusS))
+                        .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: Metrics.radiusS, style: .continuous))
                     Text("需要 Xcode 26+；`xcodebuild test` 可直接跑 40+ 单元测试。")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
@@ -104,6 +104,8 @@ struct AboutView: View {
     }
 }
 
-#Preview {
-    NavigationStack { AboutView() }
+struct AboutView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack { AboutView() }
+    }
 }

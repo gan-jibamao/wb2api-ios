@@ -2,10 +2,10 @@ import SwiftUI
 
 /// 请求日志：请求指标块 + 最近请求流水。
 struct RequestLogsView: View {
-    @Environment(SessionStore.self) private var session
+    @EnvironmentObject private var session: SessionStore
 
-    @State private var metrics = Loader<RequestMetrics>()
-    @State private var logs = Loader<JSONValue>()
+    @StateObject private var metrics = Loader<RequestMetrics>()
+    @StateObject private var logs = Loader<JSONValue>()
 
     var body: some View {
         ScrollView {
@@ -38,7 +38,7 @@ struct RequestLogsView: View {
                 SectionHeader(title: "请求明细", subtitle: "最近 \(rows.count) 条")
 
                 if rows.isEmpty {
-                    ContentUnavailableView(
+                    GCContentUnavailableView(
                         "暂无请求",
                         systemImage: "arrow.left.arrow.right",
                         description: Text("网关还没有处理过请求")

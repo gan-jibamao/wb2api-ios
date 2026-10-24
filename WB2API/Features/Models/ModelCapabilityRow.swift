@@ -10,7 +10,7 @@ struct ModelCapabilityRow: View {
         LabeledContent {
             Image(systemName: isEnabled ? "checkmark.circle.fill" : "minus.circle")
                 .foregroundStyle(isEnabled ? .green : .secondary)
-                .symbolEffect(.bounce, value: isEnabled)
+                .gcSymbolEffect(.bounce, value: isEnabled)
         } label: {
             Label(title, systemImage: systemImage)
         }
@@ -20,10 +20,12 @@ struct ModelCapabilityRow: View {
     }
 }
 
-#Preview {
-    VStack(spacing: Metrics.s) {
-        ModelCapabilityRow(title: "图像输入", systemImage: "photo", isEnabled: true)
-        ModelCapabilityRow(title: "工具调用", systemImage: "wrench.and.screwdriver", isEnabled: false)
+struct ModelCapabilityRow_Previews: PreviewProvider {
+    static var previews: some View {
+        VStack(spacing: Metrics.s) {
+            ModelCapabilityRow(title: "图像输入", systemImage: "photo", isEnabled: true)
+            ModelCapabilityRow(title: "工具调用", systemImage: "wrench.and.screwdriver", isEnabled: false)
     }
     .padding()
+    }
 }

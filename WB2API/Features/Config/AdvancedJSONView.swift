@@ -21,7 +21,7 @@ struct AdvancedJSONView: View {
                 .focused($isEditing)
                 .scrollContentBackground(.hidden)
                 .padding(Metrics.s)
-                .background(.quaternary, in: .rect(cornerRadius: Metrics.radiusM))
+                .background(.quaternary, in: RoundedRectangle(cornerRadius: Metrics.radiusM, style: .continuous))
                 .padding(Metrics.m)
                 .safeAreaInset(edge: .bottom) {
                     if let validationError {
@@ -29,9 +29,9 @@ struct AdvancedJSONView: View {
                             .font(.footnote)
                             .foregroundStyle(.red)
                             .padding(Metrics.m)
-                            .glassEffect(
+                            .gcGlass(
                                 .regular.tint(.red.opacity(0.12)),
-                                in: .rect(cornerRadius: Metrics.radiusM)
+                                in: .rect(Metrics.radiusM)
                             )
                             .padding(.horizontal, Metrics.m)
                             .padding(.bottom, Metrics.s)
@@ -53,7 +53,7 @@ struct AdvancedJSONView: View {
                     }
                 }
                 .task { loadDraft() }
-                .onChange(of: text) { _, _ in validate() }
+                .onChange(of: text) { _ in validate() }
         }
     }
 

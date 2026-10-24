@@ -2,10 +2,10 @@ import SwiftUI
 
 /// 模型目录：搜索 + 默认/繁忙标记 + 详情导航 + 探测结果弹层。
 struct ModelsView: View {
-    @Environment(SessionStore.self) private var session
+    @EnvironmentObject private var session: SessionStore
 
-    @State private var models = Loader<ModelsResponse>()
-    @State private var probes = Loader<JSONValue>()
+    @StateObject private var models = Loader<ModelsResponse>()
+    @StateObject private var probes = Loader<JSONValue>()
     @State private var searchText = ""
     @State private var isShowingProbes = false
 
@@ -27,13 +27,13 @@ struct ModelsView: View {
                         .listRowSeparator(.hidden)
                 } else if visibleModels.isEmpty {
                     if searchText.isEmpty {
-                        ContentUnavailableView(
+                        GCContentUnavailableView(
                             "暂无模型",
                             systemImage: "square.stack.3d.up.slash",
                             description: Text("面板还没有返回模型目录")
                         )
                     } else {
-                        ContentUnavailableView.search
+                        GCContentUnavailableView.search
                     }
                 } else {
                     ForEach(visibleModels) { model in

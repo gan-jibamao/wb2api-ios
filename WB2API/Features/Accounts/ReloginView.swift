@@ -7,7 +7,7 @@ import SwiftUI
 struct ReloginView: View {
     let account: Account
 
-    @Environment(SessionStore.self) private var session
+    @EnvironmentObject private var session: SessionStore
     @Environment(\.dismiss) private var dismiss
 
     @State private var start: LoginStartResponse?
@@ -57,7 +57,7 @@ struct ReloginView: View {
                 }
             }
             .task(id: start?.state) { await pollUntilDone() }
-            .sensoryFeedback(.success, trigger: result?.uid)
+            .gcSensoryFeedback(.success, trigger: result?.uid)
         }
     }
 
@@ -91,7 +91,7 @@ struct ReloginView: View {
             }
             .frame(maxWidth: .infinity)
         }
-        .buttonStyle(.glassProminent)
+        .buttonStyle(.gcGlassProminent)
         .controlSize(.large)
         .disabled(isStarting)
     }
@@ -110,7 +110,7 @@ struct ReloginView: View {
                 Label("打开授权页", systemImage: "arrow.up.right.square")
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.glass)
+            .buttonStyle(.gcGlass)
             .controlSize(.large)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -149,7 +149,7 @@ struct ReloginView: View {
             }
 
             Button("完成") { dismiss() }
-                .buttonStyle(.glass)
+                .buttonStyle(.gcGlass)
                 .controlSize(.large)
         }
         .frame(maxWidth: .infinity, alignment: .leading)

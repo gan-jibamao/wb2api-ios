@@ -1,17 +1,23 @@
 import Foundation
-import Observation
+import Combine
 
 /// 概览页的数据与操作。
 ///
 /// 账号数据统一来自 `client.overview()`——公网 nginx 没有暴露 `/status`。
+/// iOS 16 兼容：`@Observable`（iOS 17+）改为 `ObservableObject`。
 @MainActor
-@Observable
-final class OverviewModel {
+final class OverviewModel: ObservableObject {
     private let loader = Loader<OverviewResponse>()
     private let usageLoader = Loader<UsageSnapshot>()
 
-    var toast: Toast?
-    private(set) var runningBatch: BatchAction?
+    @Published var toast: Toast?
+    @Published private(set) var runningBatch: BatchAction?
+
+    init() {
+        // 内层 Loader 的变更不会自动冒泡到外层，这里显式转发。
+        loader.onChange = { [weak self] in self?.objectWillChange.send() }
+        usageLoader.onChange = { [weak self] in self?.objectWillChange.send() }
+    }
 
     var overview: OverviewResponse? { loader.value }
     /// usage 快照（今日 tokens 与用量趋势共用）

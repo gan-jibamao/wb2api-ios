@@ -1,17 +1,21 @@
 import Foundation
-import Observation
+import Combine
 
 /// 账号详情的数据与单号操作。
 ///
 /// 刷新时重新拉 `overview()`，再按 uid 找到同一个账号。
+/// iOS 16 兼容：`@Observable`（iOS 17+）改为 `ObservableObject`。
 @MainActor
-@Observable
-final class AccountDetailModel {
+final class AccountDetailModel: ObservableObject {
     private let loader = Loader<OverviewResponse>()
 
-    var toast: Toast?
-    private(set) var busy: AccountCommand?
-    private(set) var isReloading = false
+    @Published var toast: Toast?
+    @Published private(set) var busy: AccountCommand?
+    @Published private(set) var isReloading = false
+
+    init() {
+        loader.onChange = { [weak self] in self?.objectWillChange.send() }
+    }
 
     var isLoading: Bool { loader.isLoading }
     var error: String? { loader.error }
