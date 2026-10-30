@@ -34,7 +34,7 @@ struct CreditHistoryView: View {
                         .listRowBackground(Color.clear)
                 }
             } else if entries.isEmpty {
-                ContentUnavailableView {
+                GCContentUnavailableView {
                     Label("暂无积分记录", systemImage: "creditcard")
                 } description: {
                     Text("下拉刷新会连上游一起同步余额，产生变动后这里就有记录了。")
@@ -63,7 +63,7 @@ struct CreditHistoryView: View {
         .refreshable { await load(syncUpstream: true) }
         .task { await load() }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button("刷新", systemImage: "arrow.clockwise") {
                     Task { await load(syncUpstream: true) }
                 }

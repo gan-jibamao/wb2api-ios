@@ -21,7 +21,7 @@ struct CompensationView: View {
         .navigationTitle("补偿")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 if isClaiming {
                     ProgressView()
                 } else {

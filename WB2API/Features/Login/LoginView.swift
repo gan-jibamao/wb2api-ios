@@ -12,6 +12,15 @@ struct LoginView: View {
     @State private var realm = "cn"
     @State private var startResponse: LoginStartResponse?
     @State private var pollResult: LoginPollResponse?
+
+    /// 拆出三元表达式：嵌套在 Label 里会让 Swift 类型检查指数展开，编译超时。
+    private var realmHint: String {
+        realm == "cn" ? "跳转 copilot.tencent.com 登录" : "跳转 workbuddy.ai 登录"
+    }
+
+    private var realmIcon: String {
+        realm == "cn" ? "building.2" : "globe.asia.australia"
+    }
     @State private var isStarting = false
     @State private var errorText: String?
     @State private var pollNote: String?
@@ -39,8 +48,8 @@ struct LoginView: View {
                     .accessibilityLabel("登录区域")
 
                     Label(
-                        realm == "cn" ? "跳转 copilot.tencent.com 登录" : "跳转 workbuddy.ai 登录",
-                        systemImage: realm == "cn" ? "building.2" : "globe.asia.australia"
+                        realmHint,
+                        systemImage: realmIcon
                     )
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -61,7 +70,7 @@ struct LoginView: View {
                     }
                     .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.gcGlassProminent)
                 .controlSize(.large)
                 .frame(minHeight: Metrics.minTap)
                 .disabled(isStarting)
@@ -74,7 +83,7 @@ struct LoginView: View {
                     LoginResultCard(result: pollResult)
 
                     Button("再登一个账号", systemImage: "person.badge.plus", action: reset)
-                        .buttonStyle(.bordered)
+                        .buttonStyle(.gcGlass)
                         .controlSize(.large)
                         .frame(minHeight: Metrics.minTap)
                 } else if startResponse != nil {
@@ -115,7 +124,7 @@ struct LoginView: View {
         .navigationTitle("登录")
         .navigationBarTitleDisplayMode(.inline)
         .task(id: startResponse?.state) { await pollUntilDone() }
-        .hapticFeedback(.success, trigger: pollResult?.uid)
+        .gcSensoryFeedback(.success, trigger: pollResult?.uid)
     }
 
     // MARK: - API Key 直加
@@ -149,7 +158,7 @@ struct LoginView: View {
                 }
                 .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(.gcGlassProminent)
             .controlSize(.large)
             .disabled(apiKeyInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isAddingKey)
 

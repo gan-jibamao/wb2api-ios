@@ -52,7 +52,7 @@ struct UsageTrendCard: View {
             SectionHeader(title: "用量趋势", subtitle: subtitle)
 
             if buckets.isEmpty {
-                ContentUnavailableView(
+                GCContentUnavailableView(
                     "还没有用量数据",
                     systemImage: "chart.bar.xaxis",
                     description: Text("产生请求后，这里会按小时显示 token 消耗")
@@ -132,7 +132,7 @@ struct UsageTrendCard: View {
             .fill(barColor(index: bar.id))
             .opacity(isDimmed ? 0.35 : 1)
             .frame(height: barHeight(bar))
-            .animation(Motion.spring(duration: 0.15), value: activeIndex)
+            .animation(Motion.spring, value: activeIndex)
             .accessibilityHidden(true)
     }
 
@@ -148,7 +148,7 @@ struct UsageTrendCard: View {
                     .offset(y: 0)
             }
             .position(x: x, y: height / 2)
-            .animation(Motion.spring(duration: 0.1), value: activeIndex)
+            .animation(Motion.spring, value: activeIndex)
     }
 
     // MARK: - 手势
@@ -199,14 +199,14 @@ struct UsageTrendCard: View {
                 metric(title: "峰值/小时", value: Fmt.compact(peak))
             }
         }
-        .animation(Motion.spring(duration: 0.15), value: activeIndex)
+        .animation(Motion.spring, value: activeIndex)
     }
 
     private func metric(title: String, value: String) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(value)
                 .font(.callout.bold().monospacedDigit())
-                .numericTransition(value: value)
+                .gcNumericText()
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
             Text(title)

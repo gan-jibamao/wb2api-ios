@@ -28,13 +28,13 @@ struct LoginLinkCard: View {
 
             HStack(spacing: Metrics.s) {
                 Button("打开授权页", systemImage: "safari", action: open)
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.gcGlassProminent)
                     .frame(maxWidth: .infinity)
 
                 ShareLink(item: urlString) {
                     Label("分享", systemImage: "square.and.arrow.up")
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(.gcGlass)
             }
             .controlSize(.large)
             .frame(minHeight: Metrics.minTap)

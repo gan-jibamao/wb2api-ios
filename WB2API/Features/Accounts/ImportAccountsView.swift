@@ -35,7 +35,7 @@ struct ImportAccountsView: View {
                         }
                         .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.gcGlassProminent)
                     .controlSize(.large)
                     .disabled(isUploading)
                 }

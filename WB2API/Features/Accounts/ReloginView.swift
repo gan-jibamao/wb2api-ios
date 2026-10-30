@@ -52,12 +52,12 @@ struct ReloginView: View {
             .navigationTitle("重新登录")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .navigationBarLeading) {
                     Button("关闭") { dismiss() }
                 }
             }
             .task(id: start?.state) { await pollUntilDone() }
-            .hapticFeedback(.success, trigger: result?.uid)
+            .gcSensoryFeedback(.success, trigger: result?.uid)
         }
     }
 
@@ -91,7 +91,7 @@ struct ReloginView: View {
             }
             .frame(maxWidth: .infinity)
         }
-        .buttonStyle(.borderedProminent)
+        .buttonStyle(.gcGlassProminent)
         .controlSize(.large)
         .disabled(isStarting)
     }
@@ -110,7 +110,7 @@ struct ReloginView: View {
                 Label("打开授权页", systemImage: "arrow.up.right.square")
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.bordered)
+            .buttonStyle(.gcGlass)
             .controlSize(.large)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -149,7 +149,7 @@ struct ReloginView: View {
             }
 
             Button("完成") { dismiss() }
-                .buttonStyle(.bordered)
+                .buttonStyle(.gcGlass)
                 .controlSize(.large)
         }
         .frame(maxWidth: .infinity, alignment: .leading)

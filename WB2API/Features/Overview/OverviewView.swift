@@ -47,7 +47,7 @@ struct OverviewView: View {
                     } else if model.isLoading {
                         LoadingSkeleton(rows: 5)
                     } else if model.overview != nil {
-                        ContentUnavailableView {
+                        GCContentUnavailableView {
                             Label("还没有账号", systemImage: "person.crop.circle.badge.plus")
                         } description: {
                             Text("在网页端登录 WorkBuddy 账号后，下拉刷新即可出现")
@@ -80,7 +80,7 @@ struct OverviewView: View {
             .onAppear {
                 Task { await model.refreshIfStale(after: 5, using: session.client()) }
             }
-            .onValueChange(of: scenePhase) { phase in
+            .onChange(of: scenePhase) { phase in
                 guard phase == .active else { return }
                 Task { await model.refreshIfStale(after: 5, using: session.client()) }
             }

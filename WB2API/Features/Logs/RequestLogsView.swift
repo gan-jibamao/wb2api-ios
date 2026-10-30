@@ -40,7 +40,7 @@ struct RequestLogsView: View {
                 SectionHeader(title: "请求明细", subtitle: "最近 \(rows.count) 条")
 
                 if rows.isEmpty {
-                    ContentUnavailableView(
+                    GCContentUnavailableView(
                         "暂无请求",
                         systemImage: "arrow.left.arrow.right",
                         description: Text("网关还没有处理过请求")
@@ -60,7 +60,7 @@ struct RequestLogsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .refreshable { await refreshAll() }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button("刷新", systemImage: "arrow.clockwise", action: refresh)
                     .labelStyle(.iconOnly)
             }

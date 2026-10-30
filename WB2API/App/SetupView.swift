@@ -72,7 +72,7 @@ struct SetupView: View {
                     .frame(maxWidth: .infinity)
             }
         }
-        .buttonStyle(.borderedProminent)
+        .buttonStyle(.gcGlassProminent)
         .controlSize(.large)
         .disabled(address.isEmpty || key.isEmpty || isChecking)
     }

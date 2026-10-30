@@ -15,7 +15,7 @@ struct ModelDetailView: View {
         .navigationTitle(model.displayID)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink {
                     ModelSpeedTestView(focus: model)
                 } label: {

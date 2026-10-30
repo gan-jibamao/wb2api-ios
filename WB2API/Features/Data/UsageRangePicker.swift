@@ -29,7 +29,7 @@ struct UsageRangePicker: View {
                 .background(track(cornerRadius: 21))
             }
         }
-        .hapticFeedback(.selection, trigger: selection)
+        .gcSensoryFeedback(.impact, trigger: selection)
     }
 
     private var segments: some View {

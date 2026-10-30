@@ -64,7 +64,7 @@ struct ModelTogglesView: View {
                         .listRowBackground(Color.clear)
                 }
             } else if filtered.isEmpty {
-                ContentUnavailableView.search(text: query)
+                GCContentUnavailableView.search(text: query)
                     .listRowSeparator(.hidden)
             } else {
                 Section {

@@ -35,7 +35,7 @@ struct ScanResultView: View {
             )
 
             if tasks.isEmpty {
-                ContentUnavailableView(
+                GCContentUnavailableView(
                     "没有待办任务",
                     systemImage: "checkmark.seal",
                     description: Text("先点「扫描全部」，或所有账号的任务都已处理完")
@@ -178,14 +178,14 @@ private struct TaskRow: View {
                 if task.canClaim {
                     Button(TaskAction.claim.rawValue) { onAction(.claim) }
                         .font(.footnote.bold())
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(.gcGlassProminent)
                         .controlSize(.small)
                         .disabled(isBusy || isRunningState)
                 }
                 if task.canAccept {
                     Button(TaskAction.accept.rawValue) { onAction(.accept) }
                         .font(.footnote.bold())
-                        .buttonStyle(.bordered)
+                        .buttonStyle(.gcGlass)
                         .controlSize(.small)
                         .disabled(isBusy || isRunningState)
                 }
@@ -199,7 +199,7 @@ private struct TaskRow: View {
                     }
                 }
                 .font(.footnote.bold())
-                .buttonStyle(.bordered)
+                .buttonStyle(.gcGlass)
                 .controlSize(.small)
                 .disabled(isBusy || isRunningState)
             }

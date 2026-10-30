@@ -27,7 +27,7 @@ struct UsageBarChart: View {
             header
 
             if items.isEmpty {
-                ContentUnavailableView {
+                GCContentUnavailableView {
                     Label("暂无分组数据", systemImage: "chart.bar")
                 } description: {
                     Text("换一个维度或刷新后再看。")
@@ -100,7 +100,7 @@ struct UsageBarChart: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .monospacedDigit()
-                    .numericTransition(value: metric.text(for: metric.value(of: group)))
+                    .gcNumericText()
             }
         }
         .chartXAxis(.hidden)

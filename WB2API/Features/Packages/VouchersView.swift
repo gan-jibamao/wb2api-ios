@@ -42,7 +42,7 @@ struct VouchersView: View {
                         .listRowBackground(Color.clear)
                 }
             } else if nonEmpty.isEmpty {
-                ContentUnavailableView {
+                GCContentUnavailableView {
                     Label("没有可用券码", systemImage: "ticket")
                 } description: {
                     Text("开学季抽到实物券后会显示在这里；抽到的是积分，不在此列表。")
@@ -84,7 +84,7 @@ struct VouchersView: View {
         .refreshable { await load() }
         .task { await load() }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button("刷新", systemImage: "arrow.clockwise", action: refresh)
                     .disabled(loader.isLoading)
             }

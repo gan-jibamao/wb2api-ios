@@ -37,7 +37,7 @@ struct DataView: View {
                         )
                         DataHistoryLinks()
                     } else if loader.error == nil {
-                        ContentUnavailableView {
+                        GCContentUnavailableView {
                             Label("暂无用量数据", systemImage: "chart.bar.xaxis")
                         } description: {
                             Text("先在面板产生一次请求，或下拉刷新。")
@@ -63,7 +63,7 @@ struct DataView: View {
             .refreshable { await load() }
             .task(id: range) { await load() }
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .navigationBarTrailing) {
                     Button("刷新", systemImage: "arrow.clockwise", action: refresh)
                         .disabled(loader.isLoading)
                 }

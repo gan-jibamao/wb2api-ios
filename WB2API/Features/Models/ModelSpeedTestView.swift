@@ -41,7 +41,7 @@ struct ModelSpeedTestView: View {
                 modelsSection
             } else {
                 Section {
-                    ContentUnavailableView(
+                    GCContentUnavailableView(
                         "暂无模型",
                         systemImage: "square.stack.3d.up.slash",
                         description: Text("面板还没有返回模型目录")
@@ -56,7 +56,7 @@ struct ModelSpeedTestView: View {
         .task { await load() }
         .onDisappear { runner.stop() }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
                     Picker("排序", selection: $sortBySpeed) {
                         Text("目录顺序").tag(false)
@@ -104,7 +104,7 @@ struct ModelSpeedTestView: View {
                         Text(best.tokensPerSecond, format: .number.precision(.fractionLength(1)))
                             .font(.metric(.largeTitle))
                             .foregroundStyle(theme.primary)
-                            .numericTransition(value: best.tokensPerSecond)
+                            .gcNumericText()
                         Text("tok/s")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
@@ -123,7 +123,7 @@ struct ModelSpeedTestView: View {
                             systemImage: runner.isRunning ? "stop.fill" : "speedometer"
                         )
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.gcGlassProminent)
                     .tint(runner.isRunning ? .red : theme.primary)
 
                     if runner.isRunning {
@@ -271,7 +271,7 @@ private struct ModelSpeedTestRow: View {
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
-                .numericTransition(value: "tok/s")
+                .gcNumericText()
             }
 
             Button(action: onTest) {

@@ -53,7 +53,7 @@ struct TasksView: View {
             .navigationTitle("任务")
             .refreshable { await refreshAll() }
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .navigationBarTrailing) {
                     Button("刷新", systemImage: "arrow.clockwise", action: refresh)
                         .labelStyle(.iconOnly)
                         .disabled(isScanning || isRunning)
@@ -86,7 +86,7 @@ struct TasksView: View {
                         .controlSize(.small)
                     Text("执行中 \(runner.progressText)")
                         .font(.footnote.bold())
-                        .numericTransition(value: "执行中 \(runner.progressText)")
+                        .gcNumericText()
                     if runner.failureCount > 0 {
                         Text("失败 \(runner.failureCount)")
                             .font(.caption)
@@ -95,11 +95,11 @@ struct TasksView: View {
                     Spacer()
                     Button("停止") { runner.stop() }
                         .font(.footnote.bold())
-                        .buttonStyle(.bordered)
+                        .buttonStyle(.gcGlass)
                 } else {
                     Text("已选 \(selected.count) 项")
                         .font(.footnote.bold())
-                        .numericTransition(value: "已选 \(selected.count) 项")
+                        .gcNumericText()
                     Spacer()
                     Button("清空") { selected.removeAll() }
                         .font(.footnote)
@@ -111,7 +111,7 @@ struct TasksView: View {
                         Label("执行选中", systemImage: "play.fill")
                     }
                     .font(.footnote.bold())
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.gcGlassProminent)
                 }
             }
             .padding(.horizontal, Metrics.m)

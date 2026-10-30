@@ -66,10 +66,10 @@ struct QueueStatusCard: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 HStack(alignment: .firstTextBaseline, spacing: Metrics.s) {
-                    Text(primaryCount, format: .number)
+                    Text("\(primaryCount)")
                         .font(.metric())
                         .foregroundStyle(finished ? stateTint : (running ? theme.primary : .primary))
-                        .numericTransition(value: primaryCount, format: .number)
+                        .gcNumericText()
                     Text(primaryLabel)
                         .font(.callout)
                         .foregroundStyle(.secondary)

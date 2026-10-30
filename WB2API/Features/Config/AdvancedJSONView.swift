@@ -50,7 +50,7 @@ struct AdvancedJSONView: View {
                     }
                 }
                 .task { loadDraft() }
-                .onValueChange(of: text) { _ in validate() }
+                .onChange(of: text) { _ in validate() }
         }
     }
 

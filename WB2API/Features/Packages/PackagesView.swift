@@ -26,7 +26,7 @@ struct PackagesView: View {
                         .listRowBackground(Color.clear)
                 }
             } else if accounts.isEmpty {
-                ContentUnavailableView {
+                GCContentUnavailableView {
                     Label("没有礼包", systemImage: "gift")
                 } description: {
                     Text("面板尚未返回任何账号礼包。")
@@ -61,7 +61,7 @@ struct PackagesView: View {
         .refreshable { await load() }
         .task { await load() }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button("刷新", systemImage: "arrow.clockwise", action: refresh)
                     .disabled(loader.isLoading)
             }

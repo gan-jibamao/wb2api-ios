@@ -29,7 +29,7 @@ struct ErrorSummaryView: View {
                     SectionHeader(title: "错误明细", subtitle: "按出现次数排序")
 
                     if value.rows.isEmpty {
-                        ContentUnavailableView(
+                        GCContentUnavailableView(
                             "没有记录到错误",
                             systemImage: "checkmark.seal",
                             description: Text("扫描窗口内没有异常日志")
@@ -52,7 +52,7 @@ struct ErrorSummaryView: View {
         .navigationBarTitleDisplayMode(.inline)
         .refreshable { await refresh() }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button("刷新", systemImage: "arrow.clockwise", action: refreshNow)
                     .labelStyle(.iconOnly)
             }

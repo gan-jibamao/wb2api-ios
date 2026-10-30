@@ -96,13 +96,23 @@ extension View {
                 glassEffect(style, in: .capsule)
             }
         } else {
-            let fallback: AnyShape = shape == .capsule
-                ? AnyShape(Capsule())
-                : AnyShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
-            background(.ultraThinMaterial, in: fallback)
-                .overlay(fallback.strokeBorder(Color.primary.opacity(0.08), lineWidth: 0.5))
-                .clipShape(fallback)
+            // 复用已验证的扁平卡片实现，避免 AnyShape.stroke 的可用性问题。
+            if shape == .capsule {
+                gcGlass(GCGlassStyle.regular.applyingTint(tint),
+                        in: .capsule)
+            } else {
+                gcGlass(GCGlassStyle.regular.applyingTint(tint),
+                        in: .rect(cornerRadius))
+            }
         }
+    }
+}
+
+/// `GCGlassStyle` 的可选 tint 适配（原生 `tint(_:)` 要求非可选 Color）。
+extension GCGlassStyle {
+    func applyingTint(_ color: Color?) -> GCGlassStyle {
+        guard let color else { return self }
+        return tint(color)
     }
 }
 

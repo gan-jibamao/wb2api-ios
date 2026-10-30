@@ -23,7 +23,7 @@ struct ConfigView: View {
                     LoadingSkeleton(rows: 6)
                 }
             } else if !editor.isLoaded {
-                ContentUnavailableView {
+                GCContentUnavailableView {
                     Label("配置未加载", systemImage: "slider.horizontal.3")
                 } description: {
                     Text("下拉刷新重新获取面板配置。")
@@ -96,7 +96,7 @@ struct ConfigView: View {
         .refreshable { await load() }
         .task { await load() }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 if isSaving {
                     ProgressView()
                         .accessibilityLabel("正在保存")

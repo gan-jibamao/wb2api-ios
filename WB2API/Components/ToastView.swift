@@ -29,7 +29,7 @@ struct ToastOverlay: ViewModifier {
                 }
             }
             .animation(Motion.spring, value: toast?.id)
-            .hapticFeedback(.success, trigger: toast?.id)
+            .gcSensoryFeedback(.success, trigger: toast?.id)
     }
 
     private func icon(for kind: Toast.Kind) -> String {

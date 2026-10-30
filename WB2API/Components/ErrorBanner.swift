@@ -9,7 +9,7 @@ struct ErrorBanner: View {
         HStack(spacing: Metrics.s) {
             Image(systemName: "exclamationmark.triangle.fill")
                 .foregroundStyle(.red)
-                .wiggleOnChange(value: message)
+                .gcSymbolEffect(.wiggle, value: message)
             Text(message)
                 .font(.footnote)
                 .foregroundStyle(.primary)
@@ -17,7 +17,7 @@ struct ErrorBanner: View {
             Spacer(minLength: 0)
             Button("重试", action: retry)
                 .font(.footnote.bold())
-                .buttonStyle(.bordered)
+                .buttonStyle(.gcGlass)
         }
         .padding(Metrics.m)
         .glassSurface(cornerRadius: Metrics.radiusM, tint: .red.opacity(0.12), interactive: false, shape: .rect)

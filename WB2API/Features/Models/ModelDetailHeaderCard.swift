@@ -35,7 +35,7 @@ struct ModelDetailHeaderCard: View {
                 Text(model.creditMultiplierText)
                     .font(.metric())
                     .foregroundStyle(theme.primary)
-                    .numericTransition(value: model.creditMultiplierText)
+                    .gcNumericText()
                 Text("倍率")
                     .font(.footnote)
                     .foregroundStyle(.secondary)

@@ -107,7 +107,7 @@ struct AccountDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.visible, for: .navigationBar)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: reload) {
                     if model.isLoading || model.isReloading {
                         ProgressView().controlSize(.small)
@@ -153,7 +153,7 @@ struct AccountDetailView: View {
                     Label("重新登录", systemImage: "person.badge.key.fill")
                         .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.gcGlassProminent)
                 .controlSize(.large)
 
                 NavigationLink {
@@ -162,7 +162,7 @@ struct AccountDetailView: View {
                     Label("查看日志", systemImage: "text.alignleft")
                         .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(.gcGlass)
                 .controlSize(.large)
             }
         }

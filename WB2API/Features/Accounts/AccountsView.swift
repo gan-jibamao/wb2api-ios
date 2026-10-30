@@ -33,7 +33,7 @@ struct AccountsView: View {
                 AccountDetailView(account: account)
             }
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink {
                         LogsView()
                     } label: {
@@ -41,10 +41,10 @@ struct AccountsView: View {
                     }
                     .labelStyle(.iconOnly)
                 }
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .navigationBarTrailing) {
                     filterMenu
                 }
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .navigationBarTrailing) {
                     // 不 disable：轮询期间点击也要能强制重发，转圈只是反馈
                     Button(action: reload) {
                         if model.isLoading || model.isReloading {
@@ -67,13 +67,13 @@ struct AccountsView: View {
             .onAppear {
                 Task { await model.refreshIfStale(after: 3, using: session.client()) }
             }
-            .onValueChange(of: path) { newPath in
+            .onChange(of: path) { newPath in
                 // 详情页里做的复活 / 恢复 / 移除不会回传列表：回到列表时强制重读一次，
                 // 不等 20 秒轮询（用户会以为「操作了但状态没变」）。
                 guard newPath.isEmpty else { return }
                 Task { await model.load(using: session.client(), force: true) }
             }
-            .onValueChange(of: scenePhase) { phase in
+            .onChange(of: scenePhase) { phase in
                 // 从后台回来时拉一次（仅轻量读缓存级 overview，不触发上游同步）
                 guard phase == .active else { return }
                 Task { await model.refreshIfStale(after: 3, using: session.client()) }

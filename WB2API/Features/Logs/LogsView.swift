@@ -62,7 +62,7 @@ struct LogsView: View {
                         .listRowBackground(Color.clear)
                         .listRowSeparator(.hidden)
                 } else if visibleEntries.isEmpty {
-                    ContentUnavailableView(
+                    GCContentUnavailableView(
                         "暂无日志",
                         systemImage: "text.alignleft",
                         description: Text("该通道还没有记录")
@@ -96,7 +96,7 @@ struct LogsView: View {
         }
         .refreshable { await refreshLogs() }
         .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
                 NavigationLink(value: LogsRoute.requestLogs) {
                     Label("请求日志", systemImage: "arrow.left.arrow.right")
                 }

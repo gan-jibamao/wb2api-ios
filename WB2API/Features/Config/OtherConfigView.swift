@@ -36,7 +36,7 @@ struct OtherConfigView: View {
         .navigationTitle("其他原始配置")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button("高级 JSON", systemImage: "curlybraces") {
                     isJSONPresented = true
                 }

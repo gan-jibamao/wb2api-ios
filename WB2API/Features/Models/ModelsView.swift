@@ -51,13 +51,13 @@ struct ModelsView: View {
                         .listRowSeparator(.hidden)
                 } else if visibleModels.isEmpty {
                     if searchText.isEmpty {
-                        ContentUnavailableView(
+                        GCContentUnavailableView(
                             "暂无模型",
                             systemImage: "square.stack.3d.up.slash",
                             description: Text("面板还没有返回模型目录")
                         )
                     } else {
-                        ContentUnavailableView.search
+                        GCContentUnavailableView.search
                     }
                 } else {
                     ForEach(visibleModels) { model in
@@ -84,11 +84,11 @@ struct ModelsView: View {
             ModelDetailView(model: model)
         }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button("模型探测", systemImage: "waveform.path.ecg", action: openProbes)
                     .labelStyle(.iconOnly)
             }
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button("刷新", systemImage: "arrow.clockwise", action: refresh)
                     .labelStyle(.iconOnly)
             }

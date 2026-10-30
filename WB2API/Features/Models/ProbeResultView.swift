@@ -14,7 +14,7 @@ struct ProbeResultView: View {
                 if probes == nil {
                     LoadingSkeleton(rows: 4)
                 } else if isEmptyProbe {
-                    ContentUnavailableView(
+                    GCContentUnavailableView(
                         "暂无探测记录",
                         systemImage: "waveform.path.ecg",
                         description: Text("面板尚未执行模型探测")
@@ -32,7 +32,7 @@ struct ProbeResultView: View {
 
                     if text.count > Self.foldLimit {
                         Button(isExpanded ? "收起" : "展开全部", action: toggleExpanded)
-                            .buttonStyle(.bordered)
+                            .buttonStyle(.gcGlass)
                             .frame(maxWidth: .infinity)
                     }
                 }
