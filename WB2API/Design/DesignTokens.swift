@@ -88,13 +88,12 @@ extension View {
                       interactive: Bool,
                       shape: GlassShapeKind = .rect) -> some View {
         if #available(iOS 26.0, *) {
+            let style = Glass.regular.applying(tint: tint, interactive: interactive)
             switch shape {
             case .rect:
-                glassEffect(Glass.regular.applying(tint: tint, interactive: interactive),
-                            in: .rect(cornerRadius: cornerRadius))
+                glassEffect(style, in: .rect(cornerRadius: cornerRadius))
             case .capsule:
-                glassEffect(Glass.regular.applying(tint: tint, interactive: interactive),
-                            in: .capsule)
+                glassEffect(style, in: .capsule)
             }
         } else {
             let fallback: AnyShape = shape == .capsule
@@ -108,7 +107,7 @@ extension View {
 }
 
 @available(iOS 26.0, *)
-private extension Glass {
+extension Glass {
     /// 按需叠加 tint / interactive；顺序与原生语义一致（先 interactive 再 tint）。
     func applying(tint: Color?, interactive: Bool) -> Glass {
         var style = self
