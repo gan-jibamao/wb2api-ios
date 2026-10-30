@@ -2,8 +2,8 @@ import SwiftUI
 
 /// 配置：网页端同款中文分区 + 未映射键的原始表单 + 高级 JSON 编辑。
 struct ConfigView: View {
-    @Environment(SessionStore.self) private var session
-    @State private var editor = ConfigEditor()
+    @EnvironmentObject private var session: SessionStore
+    @StateObject private var editor = ConfigEditor()
     @State private var isLoading = false
     @State private var errorText: String?
     @State private var isSaving = false
@@ -192,5 +192,5 @@ struct ConfigView: View {
     NavigationStack {
         ConfigView()
     }
-    .environment(SessionStore())
+    .environmentObject(SessionStore())
 }

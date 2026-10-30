@@ -5,8 +5,8 @@ import SwiftUI
 /// 账本是「每次真实查到余额」与上一次比对后的留痕，所以刷新要先把上游余额拉一遍
 /// （`POST /balance_all`），否则只是重读本地账本，看到的历史不会变。
 struct CreditHistoryView: View {
-    @Environment(SessionStore.self) private var session
-    @State private var loader = Loader<CreditHistory>()
+    @EnvironmentObject private var session: SessionStore
+    @StateObject private var loader = Loader<CreditHistory>()
     @State private var isSyncing = false
 
     private var entries: [CreditEntry] {

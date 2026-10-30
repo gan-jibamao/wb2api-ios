@@ -67,7 +67,7 @@ struct ScanResultView: View {
                 .accessibilityLabel(allChosen ? "取消选择 \(group.nickname)" : "选择 \(group.nickname) 的全部任务")
 
                 Button {
-                    withAnimation(.snappy) { expandedUID = expanded ? nil : group.uid }
+                    withAnimation(Motion.spring) { expandedUID = expanded ? nil : group.uid }
                 } label: {
                     HStack(spacing: Metrics.s) {
                         Label(group.nickname, systemImage: "person.crop.circle")
@@ -178,14 +178,14 @@ private struct TaskRow: View {
                 if task.canClaim {
                     Button(TaskAction.claim.rawValue) { onAction(.claim) }
                         .font(.footnote.bold())
-                        .buttonStyle(.glassProminent)
+                        .buttonStyle(.borderedProminent)
                         .controlSize(.small)
                         .disabled(isBusy || isRunningState)
                 }
                 if task.canAccept {
                     Button(TaskAction.accept.rawValue) { onAction(.accept) }
                         .font(.footnote.bold())
-                        .buttonStyle(.glass)
+                        .buttonStyle(.bordered)
                         .controlSize(.small)
                         .disabled(isBusy || isRunningState)
                 }
@@ -199,7 +199,7 @@ private struct TaskRow: View {
                     }
                 }
                 .font(.footnote.bold())
-                .buttonStyle(.glass)
+                .buttonStyle(.bordered)
                 .controlSize(.small)
                 .disabled(isBusy || isRunningState)
             }
@@ -210,8 +210,8 @@ private struct TaskRow: View {
             RoundedRectangle(cornerRadius: Metrics.radiusS)
                 .strokeBorder(isSelected ? theme.primary.opacity(0.35) : .clear, lineWidth: 1)
         }
-        .animation(.snappy, value: task.acceptStatus)
-        .animation(.snappy, value: isSelected)
+        .animation(Motion.spring, value: task.acceptStatus)
+        .animation(Motion.spring, value: isSelected)
     }
 
     private var isRunningState: Bool {

@@ -59,7 +59,7 @@ struct HealthCard: View {
                 VStack(spacing: 0) {
                     Text(digest.healthLabel)
                         .font(.metric(.title2))
-                        .contentTransition(.numericText())
+                        .numericTransition(value: digest.healthLabel)
                         .lineLimit(1)
                         .minimumScaleFactor(0.55)
                     Text("健康")

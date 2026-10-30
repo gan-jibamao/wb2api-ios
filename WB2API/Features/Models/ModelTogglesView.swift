@@ -9,7 +9,7 @@ struct ModelTogglesView: View {
 
     let account: Account
 
-    @Environment(SessionStore.self) private var session
+    @EnvironmentObject private var session: SessionStore
     @State private var models: [ModelInfo] = []
     @State private var offModels: Set<String> = []
     @State private var query = ""

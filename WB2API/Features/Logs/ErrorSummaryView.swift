@@ -2,9 +2,9 @@ import SwiftUI
 
 /// 错误汇总：扫描概览 + 按分组聚合的错误卡。
 struct ErrorSummaryView: View {
-    @Environment(SessionStore.self) private var session
+    @EnvironmentObject private var session: SessionStore
 
-    @State private var summary = Loader<ErrorSummary>()
+    @StateObject private var summary = Loader<ErrorSummary>()
 
     var body: some View {
         ScrollView {

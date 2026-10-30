@@ -100,7 +100,7 @@ struct UsageBarChart: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .monospacedDigit()
-                    .contentTransition(.numericText())
+                    .numericTransition(value: metric.text(for: metric.value(of: group)))
             }
         }
         .chartXAxis(.hidden)

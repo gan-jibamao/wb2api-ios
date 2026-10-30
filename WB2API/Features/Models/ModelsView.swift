@@ -4,10 +4,10 @@ import SwiftUI
 struct ModelsView: View {
     @Environment(\.appTheme) private var theme
 
-    @Environment(SessionStore.self) private var session
+    @EnvironmentObject private var session: SessionStore
 
-    @State private var models = Loader<ModelsResponse>()
-    @State private var probes = Loader<JSONValue>()
+    @StateObject private var models = Loader<ModelsResponse>()
+    @StateObject private var probes = Loader<JSONValue>()
     @State private var searchText = ""
     @State private var isShowingProbes = false
 

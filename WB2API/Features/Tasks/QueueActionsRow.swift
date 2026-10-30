@@ -20,7 +20,7 @@ struct QueueActionsRow: View {
                         isBusy: false
                     )
                 }
-                .buttonStyle(.glassProminent)
+                .buttonStyle(.borderedProminent)
                 .tint(.red)
             } else {
                 Button(action: onRun) {
@@ -30,7 +30,7 @@ struct QueueActionsRow: View {
                         isBusy: false
                     )
                 }
-                .buttonStyle(.glassProminent)
+                .buttonStyle(.borderedProminent)
                 .tint(theme.primary)
                 .disabled(isScanning)
             }
@@ -42,7 +42,7 @@ struct QueueActionsRow: View {
                     isBusy: isScanning
                 )
             }
-            .buttonStyle(.glass)
+            .buttonStyle(.bordered)
             .disabled(isScanning || isRunning)
 
             if isRunning {
@@ -58,6 +58,6 @@ struct QueueActionsRow: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .animation(.snappy, value: isRunning)
+        .animation(Motion.spring, value: isRunning)
     }
 }

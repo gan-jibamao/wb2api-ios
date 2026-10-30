@@ -2,7 +2,7 @@ import SwiftUI
 
 @main
 struct WB2APIApp: App {
-    @State private var session = SessionStore()
+    @StateObject private var session = SessionStore()
     @AppStorage(AppTheme.storageKey) private var accentName = AccentChoice.violet.rawValue
 
     private var theme: AppTheme {
@@ -12,7 +12,7 @@ struct WB2APIApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
-                .environment(session)
+                .environmentObject(session)
                 .environment(\.appTheme, theme)
                 .tint(theme.primary)
         }

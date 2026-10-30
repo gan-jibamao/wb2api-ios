@@ -23,7 +23,7 @@ struct BatchActionsRow: View {
             }
             .padding(.vertical, Metrics.m)
             .frame(maxWidth: .infinity)
-            .glassEffect(.regular.interactive(), in: .rect(cornerRadius: Metrics.radiusL))
+            .glassSurface(cornerRadius: Metrics.radiusL, tint: nil, interactive: true, shape: .rect)
         }
     }
 

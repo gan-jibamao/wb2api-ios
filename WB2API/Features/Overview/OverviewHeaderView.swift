@@ -26,7 +26,7 @@ struct OverviewHeaderView: View {
             Text(summary)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
-                .contentTransition(.numericText())
+                .numericTransition(value: summary)
                 .animation(Motion.numeric, value: summary)
 
             if let syncText {

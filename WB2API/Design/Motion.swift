@@ -2,10 +2,12 @@ import SwiftUI
 
 /// 动效 token。硬规则：所有动画必须带 `value:`；Reduce Motion 下退化为 opacity。
 enum Motion {
-    static let spring = Animation.snappy(duration: 0.28)
+    // Animation.snappy / .bouncy / .smooth 都是 iOS 17 预设，16.0 上不存在。
+    // 用 spring(response:dampingFraction:) 手工拟合，参数按 Apple 默认曲线取近似值。
+    static let spring = Animation.spring(response: 0.28, dampingFraction: 0.78)
     static let snappy = spring  // 别名：部分视图按名字直取
-    static let emphasized = Animation.bouncy(duration: 0.45)
-    static let numeric = Animation.smooth(duration: 0.35)
+    static let emphasized = Animation.spring(response: 0.45, dampingFraction: 0.65)
+    static let numeric = Animation.spring(response: 0.35, dampingFraction: 1.0)
     static let gentle = Animation.easeOut(duration: 0.22)
 
     /// 错峰入场延迟（索引 × 40ms，封顶 240ms）
@@ -66,3 +68,87 @@ extension View {
         modifier(StaggeredAppear(index: index))
     }
 }
+
+// MARK: - iOS 17 API 兼容层（16.0 回退）
+
+/// `onChange(of:) { _, new in }` 双参闭包是 iOS 17 才有的重载。
+/// 这里收口成单参语义，两个系统版本都能编。
+extension View {
+    @ViewBuilder
+    func onValueChange<V: Equatable>(of value: V,
+                                     perform action: @escaping (V) -> Void) -> some View {
+        if #available(iOS 17.0, *) {
+            onChange(of: value) { _, newValue in action(newValue) }
+        } else {
+            onChange(of: value, perform: action)
+        }
+    }
+}
+
+/// `sensoryFeedback(_:trigger:)` 是 iOS 17 API；低版本走 UIKit 的 feedback generator。
+enum SensoryKind {
+    case success
+    case selection
+    case warning
+    case error
+
+    @available(iOS 17.0, *)
+    var feedback: SensoryFeedback {
+        switch self {
+        case .success: return .success
+        case .selection: return .selection
+        case .warning: return .warning
+        case .error: return .error
+        }
+    }
+
+    func fireLegacy() {
+        switch self {
+        case .success:
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
+        case .selection:
+            UISelectionFeedbackGenerator().selectionChanged()
+        case .warning:
+            UINotificationFeedbackGenerator().notificationOccurred(.warning)
+        case .error:
+            UINotificationFeedbackGenerator().notificationOccurred(.error)
+        }
+    }
+}
+
+extension View {
+    @ViewBuilder
+    func hapticFeedback<V: Equatable>(_ kind: SensoryKind, trigger: V) -> some View {
+        if #available(iOS 17.0, *) {
+            sensoryFeedback(kind.feedback, trigger: trigger)
+        } else {
+            onValueChange(of: trigger) { _ in kind.fireLegacy() }
+        }
+    }
+}
+
+/// `contentTransition(.numericText())` 是 iOS 17 API。
+/// 低版本保留数字变化的淡入淡出，丢掉滚动效果。
+extension View {
+    @ViewBuilder
+    func numericTransition<V: Equatable>(value: V) -> some View {
+        if #available(iOS 17.0, *) {
+            contentTransition(.numericText()).animation(Motion.numeric, value: value)
+        } else {
+            animation(Motion.numeric, value: value)
+        }
+    }
+}
+
+/// `symbolEffect(.wiggle)` 是 iOS 17 专属；低版本退化为无动效。
+extension View {
+    @ViewBuilder
+    func wiggleOnChange<V: Equatable>(value: V) -> some View {
+        if #available(iOS 17.0, *) {
+            symbolEffect(.wiggle, value: value)
+        } else {
+            self
+        }
+    }
+}
+

@@ -6,12 +6,11 @@ import SwiftUI
 struct OverviewView: View {
     @Environment(\.appTheme) private var theme
 
-    @Environment(SessionStore.self) private var session
+    @EnvironmentObject private var session: SessionStore
     @Environment(\.scenePhase) private var scenePhase
-    @State private var model = OverviewModel()
+    @StateObject private var model = OverviewModel()
 
     var body: some View {
-        @Bindable var model = model
 
         NavigationStack {
             ScrollView {
@@ -81,7 +80,7 @@ struct OverviewView: View {
             .onAppear {
                 Task { await model.refreshIfStale(after: 5, using: session.client()) }
             }
-            .onChange(of: scenePhase) { _, phase in
+            .onValueChange(of: scenePhase) { phase in
                 guard phase == .active else { return }
                 Task { await model.refreshIfStale(after: 5, using: session.client()) }
             }

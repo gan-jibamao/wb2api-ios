@@ -4,8 +4,8 @@ import SwiftUI
 struct DataView: View {
     @Environment(\.appTheme) private var theme
 
-    @Environment(SessionStore.self) private var session
-    @State private var loader = Loader<UsageSnapshot>()
+    @EnvironmentObject private var session: SessionStore
+    @StateObject private var loader = Loader<UsageSnapshot>()
     @State private var dimension: UsageDimension = .account
     /// 排行口径持久化：默认按积分消耗，直接回答「哪个模型最烧积分」。
     @AppStorage("wb2api.usageMetric") private var metric: UsageMetric = .credits
@@ -110,5 +110,5 @@ struct DataView: View {
 
 #Preview {
     DataView()
-        .environment(SessionStore())
+        .environmentObject(SessionStore())
 }

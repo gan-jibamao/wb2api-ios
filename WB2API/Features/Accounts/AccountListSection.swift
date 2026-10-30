@@ -8,7 +8,7 @@ import SwiftUI
 struct AccountListSection: View {
     @Environment(\.appTheme) private var theme
 
-    let model: AccountsModel
+    @ObservedObject var model: AccountsModel
     let zoomNamespace: Namespace.ID
     var onReload: () -> Void
     var onOpen: (Account) -> Void

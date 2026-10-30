@@ -71,7 +71,7 @@ struct DataUsageSummaryCard: View {
                 Text(Fmt.tokens(tokens))
                     .font(.system(.largeTitle, design: .rounded).weight(.semibold))
                     .monospacedDigit()
-                    .contentTransition(.numericText())
+                    .numericTransition(value: Fmt.tokens(tokens))
                     .lineLimit(1)
                     .minimumScaleFactor(0.55)
                 Text("tokens")

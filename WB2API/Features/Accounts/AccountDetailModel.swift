@@ -1,17 +1,24 @@
 import Foundation
-import Observation
+import Combine
 
 /// 账号详情的数据与单号操作。
 ///
 /// 刷新时重新拉 `overview()`，再按 uid 找到同一个账号。
 @MainActor
-@Observable
-final class AccountDetailModel {
+final class AccountDetailModel: ObservableObject {
     private let loader = Loader<OverviewResponse>()
+    private var cancellables: Set<AnyCancellable> = []
 
-    var toast: Toast?
-    private(set) var busy: AccountCommand?
-    private(set) var isReloading = false
+    @Published var toast: Toast?
+    @Published private(set) var busy: AccountCommand?
+    @Published private(set) var isReloading = false
+
+    init() {
+        // Loader 变更中继：详情页数据回填后才会重绘。
+        loader.objectWillChange
+            .sink { [weak self] _ in self?.objectWillChange.send() }
+            .store(in: &cancellables)
+    }
 
     var isLoading: Bool { loader.isLoading }
     var error: String? { loader.error }

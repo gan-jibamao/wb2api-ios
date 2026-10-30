@@ -25,7 +25,7 @@ struct ErrorRowView: View {
                 Text("\(row.count ?? 0)")
                     .font(.metricSmall())
                     .foregroundStyle(tint)
-                    .contentTransition(.numericText())
+                    .numericTransition(value: "\(row.count ?? 0)")
                 Text("次")
                     .font(.caption)
                     .foregroundStyle(.secondary)

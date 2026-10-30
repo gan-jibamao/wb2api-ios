@@ -1,5 +1,5 @@
 import Foundation
-import Observation
+import Combine
 
 /// 单个模型的测速结果：tok/s 只算首字之后到流结束，TTFB 单独展示。
 struct ModelSpeedResult: Codable, Identifiable, Equatable, Sendable {
@@ -25,17 +25,16 @@ enum ModelSpeedState: Equatable {
 
 /// 串行测速器：一次只打一个模型，避免并发互相拖慢、也避免把号池打满。
 @MainActor
-@Observable
-final class ModelSpeedRunner {
+final class ModelSpeedRunner: ObservableObject {
     static let prompt = "请写一段约 200 字的中文科普，主题：为什么天空是蓝色的。直接输出正文，不要标题、不要列表、不要解释。"
     static let maxTokens = 256
 
-    private(set) var results: [String: ModelSpeedResult] = [:]
-    private(set) var states: [String: ModelSpeedState] = [:]
-    private(set) var isRunning = false
-    private(set) var currentModelID: String?
-    private(set) var completed = 0
-    private(set) var total = 0
+    @Published private(set) var results: [String: ModelSpeedResult] = [:]
+    @Published private(set) var states: [String: ModelSpeedState] = [:]
+    @Published private(set) var isRunning = false
+    @Published private(set) var currentModelID: String?
+    @Published private(set) var completed = 0
+    @Published private(set) var total = 0
 
     private var client: APIClient?
     private var models: [ModelInfo] = []

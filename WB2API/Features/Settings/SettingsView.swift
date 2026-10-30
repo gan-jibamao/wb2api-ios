@@ -2,7 +2,7 @@ import SwiftUI
 
 /// 设置：服务器地址、访问密钥、连接测试、关于与退出登录。
 struct SettingsView: View {
-    @Environment(SessionStore.self) private var session
+    @EnvironmentObject private var session: SessionStore
     @Environment(\.appTheme) private var theme
     @AppStorage(AppTheme.storageKey) private var accentName = AccentChoice.violet.rawValue
 
@@ -22,7 +22,6 @@ struct SettingsView: View {
     }
 
     var body: some View {
-        @Bindable var session = session
 
         Form {
             Section {
@@ -175,5 +174,5 @@ struct SettingsView: View {
     NavigationStack {
         SettingsView()
     }
-    .environment(SessionStore())
+    .environmentObject(SessionStore())
 }

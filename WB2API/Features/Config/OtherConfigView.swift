@@ -5,7 +5,7 @@ import SwiftUI
 /// 单独放一页，避免把主配置页撑成几十个英文分组；字段一个不少，
 /// 复杂结构仍然可以走「高级 JSON 编辑」。
 struct OtherConfigView: View {
-    let editor: ConfigEditor
+    @ObservedObject var editor: ConfigEditor
 
     @State private var isJSONPresented = false
 

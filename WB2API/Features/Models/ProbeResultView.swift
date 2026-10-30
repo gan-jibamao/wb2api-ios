@@ -32,7 +32,7 @@ struct ProbeResultView: View {
 
                     if text.count > Self.foldLimit {
                         Button(isExpanded ? "收起" : "展开全部", action: toggleExpanded)
-                            .buttonStyle(.glass)
+                            .buttonStyle(.bordered)
                             .frame(maxWidth: .infinity)
                     }
                 }

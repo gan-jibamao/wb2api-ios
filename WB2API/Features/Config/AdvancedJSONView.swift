@@ -3,7 +3,7 @@ import SwiftUI
 
 /// 高级编辑：整份配置的 JSON 文本编辑 + 实时校验，以 sheet 呈现。
 struct AdvancedJSONView: View {
-    let editor: ConfigEditor
+    @ObservedObject var editor: ConfigEditor
 
     @Environment(\.dismiss) private var dismiss
     @State private var text = ""
@@ -29,10 +29,7 @@ struct AdvancedJSONView: View {
                             .font(.footnote)
                             .foregroundStyle(.red)
                             .padding(Metrics.m)
-                            .glassEffect(
-                                .regular.tint(.red.opacity(0.12)),
-                                in: .rect(cornerRadius: Metrics.radiusM)
-                            )
+                            .glassSurface(cornerRadius: Metrics.radiusM, tint: .red.opacity(0.12), interactive: false, shape: .rect)
                             .padding(.horizontal, Metrics.m)
                             .padding(.bottom, Metrics.s)
                     }
@@ -53,7 +50,7 @@ struct AdvancedJSONView: View {
                     }
                 }
                 .task { loadDraft() }
-                .onChange(of: text) { _, _ in validate() }
+                .onValueChange(of: text) { _ in validate() }
         }
     }
 

@@ -1,19 +1,18 @@
 import Foundation
-import Observation
+import Combine
 
 /// 配置编辑状态：保存加载时的快照与可编辑草稿，提供路径级读写。
 @MainActor
-@Observable
-final class ConfigEditor {
-    private(set) var original: JSONValue = .object([:])
-    var draft: JSONValue = .object([:])
-    private(set) var path: String?
-    private(set) var apiKeyEnvManaged = false
-    private(set) var isLoaded = false
+final class ConfigEditor: ObservableObject {
+    @Published private(set) var original: JSONValue = .object([:])
+    @Published var draft: JSONValue = .object([:])
+    @Published private(set) var path: String?
+    @Published private(set) var apiKeyEnvManaged = false
+    @Published private(set) var isLoaded = false
 
     /// 输入框格式错误（如时点写了 25 点）：有错误时禁止保存，
     /// 避免把旧值静默提交、让用户以为改动生效了。
-    private(set) var invalidFieldIDs: Set<String> = []
+    @Published private(set) var invalidFieldIDs: Set<String> = []
 
     var isDirty: Bool { draft != original }
 

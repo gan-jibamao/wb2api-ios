@@ -10,7 +10,7 @@ struct RequestLogRowView: View {
                 Text(statusText)
                     .font(.footnote.monospacedDigit().bold())
                     .foregroundStyle(tint)
-                    .contentTransition(.numericText())
+                    .numericTransition(value: statusText)
                 if let outcome = row.outcome {
                     Text(outcome)
                         .font(.tag)

@@ -9,8 +9,8 @@ import UIKit
 struct VouchersView: View {
     @Environment(\.appTheme) private var theme
 
-    @Environment(SessionStore.self) private var session
-    @State private var loader = Loader<VoucherResponse>()
+    @EnvironmentObject private var session: SessionStore
+    @StateObject private var loader = Loader<VoucherResponse>()
     @State private var toast: Toast?
 
     private var accounts: [VoucherAccount] {

@@ -25,7 +25,7 @@ struct CreditsCard: View {
                 Text(Fmt.credits(account.credits))
                     .font(.metric(.largeTitle))
                     .foregroundStyle(theme.primary)
-                    .contentTransition(.numericText())
+                    .numericTransition(value: Fmt.credits(account.credits))
                     .lineLimit(1)
                     .minimumScaleFactor(0.55)
 

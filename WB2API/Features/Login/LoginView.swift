@@ -6,7 +6,7 @@ import SwiftUI
 struct LoginView: View {
     @Environment(\.appTheme) private var theme
 
-    @Environment(SessionStore.self) private var session
+    @EnvironmentObject private var session: SessionStore
 
     /// 登录域：国内版 cn / 国际版 global
     @State private var realm = "cn"
@@ -61,7 +61,7 @@ struct LoginView: View {
                     }
                     .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.glassProminent)
+                .buttonStyle(.borderedProminent)
                 .controlSize(.large)
                 .frame(minHeight: Metrics.minTap)
                 .disabled(isStarting)
@@ -74,7 +74,7 @@ struct LoginView: View {
                     LoginResultCard(result: pollResult)
 
                     Button("再登一个账号", systemImage: "person.badge.plus", action: reset)
-                        .buttonStyle(.glass)
+                        .buttonStyle(.bordered)
                         .controlSize(.large)
                         .frame(minHeight: Metrics.minTap)
                 } else if startResponse != nil {
@@ -115,7 +115,7 @@ struct LoginView: View {
         .navigationTitle("登录")
         .navigationBarTitleDisplayMode(.inline)
         .task(id: startResponse?.state) { await pollUntilDone() }
-        .sensoryFeedback(.success, trigger: pollResult?.uid)
+        .hapticFeedback(.success, trigger: pollResult?.uid)
     }
 
     // MARK: - API Key 直加
@@ -149,7 +149,7 @@ struct LoginView: View {
                 }
                 .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.glassProminent)
+            .buttonStyle(.borderedProminent)
             .controlSize(.large)
             .disabled(apiKeyInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isAddingKey)
 
@@ -270,5 +270,5 @@ struct LoginView: View {
     NavigationStack {
         LoginView()
     }
-    .environment(SessionStore())
+    .environmentObject(SessionStore())
 }

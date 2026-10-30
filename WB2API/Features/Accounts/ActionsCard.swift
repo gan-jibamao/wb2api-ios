@@ -40,7 +40,7 @@ struct ActionsCard: View {
                         .font(.subheadline)
                         .frame(maxWidth: .infinity, minHeight: Metrics.minTap)
                     }
-                    .buttonStyle(.glass)
+                    .buttonStyle(.bordered)
                     .controlSize(.large)
                     .disabled(busy != nil || !isApplicable(command))
                     .accessibilityHint(command.hint)
@@ -54,7 +54,7 @@ struct ActionsCard: View {
                     .font(.subheadline)
                     .frame(maxWidth: .infinity, minHeight: Metrics.minTap)
             }
-            .buttonStyle(.glass)
+            .buttonStyle(.bordered)
             .tint(.red)
             .controlSize(.large)
             .disabled(busy != nil)

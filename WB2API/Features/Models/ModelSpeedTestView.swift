@@ -4,9 +4,9 @@ import SwiftUI
 struct ModelSpeedTestView: View {
     @Environment(\.appTheme) private var theme
 
-    @Environment(SessionStore.self) private var session
-    @State private var models = Loader<ModelsResponse>()
-    @State private var runner = ModelSpeedRunner()
+    @EnvironmentObject private var session: SessionStore
+    @StateObject private var models = Loader<ModelsResponse>()
+    @StateObject private var runner = ModelSpeedRunner()
     @State private var searchText = ""
     @State private var sortBySpeed = false
     @State private var didAutoStart = false
@@ -104,7 +104,7 @@ struct ModelSpeedTestView: View {
                         Text(best.tokensPerSecond, format: .number.precision(.fractionLength(1)))
                             .font(.metric(.largeTitle))
                             .foregroundStyle(theme.primary)
-                            .contentTransition(.numericText())
+                            .numericTransition(value: best.tokensPerSecond)
                         Text("tok/s")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
@@ -271,7 +271,7 @@ private struct ModelSpeedTestRow: View {
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
-                .contentTransition(.numericText())
+                .numericTransition(value: "tok/s")
             }
 
             Button(action: onTest) {

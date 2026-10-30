@@ -4,8 +4,8 @@ import SwiftUI
 struct BalanceHistoryView: View {
     @Environment(\.appTheme) private var theme
 
-    @Environment(SessionStore.self) private var session
-    @State private var loader = Loader<BalanceHistory>()
+    @EnvironmentObject private var session: SessionStore
+    @StateObject private var loader = Loader<BalanceHistory>()
     @State private var days = 7
 
     private var seriesList: [BalanceSeries] {
@@ -55,7 +55,7 @@ struct BalanceHistoryView: View {
                         Text(Fmt.credits(totalCurrent))
                             .font(.metricSmall())
                             .foregroundStyle(theme.primary)
-                            .contentTransition(.numericText())
+                            .numericTransition(value: Fmt.credits(totalCurrent))
                     }
                     LabeledContent("账号数", value: "\(seriesList.count)")
                     LabeledContent("区间", value: "\(days) 天")
@@ -83,7 +83,7 @@ struct BalanceHistoryView: View {
                             VStack(alignment: .trailing, spacing: 2) {
                                 Text(Fmt.credits(series.current))
                                     .font(.body.monospacedDigit())
-                                    .contentTransition(.numericText())
+                                    .numericTransition(value: Fmt.credits(series.current))
                                 Text(changeText(series.change))
                                     .font(.footnote)
                                     .foregroundStyle(.secondary)

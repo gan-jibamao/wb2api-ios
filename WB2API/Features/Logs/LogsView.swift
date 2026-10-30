@@ -7,9 +7,9 @@ struct LogsView: View {
     /// 只看与该账号相关的日志（昵称 / UID 前缀，大小写不敏感）。
     var keyword: String?
 
-    @Environment(SessionStore.self) private var session
+    @EnvironmentObject private var session: SessionStore
 
-    @State private var logs = Loader<LogsResponse>()
+    @StateObject private var logs = Loader<LogsResponse>()
     @State private var channel: LogChannel = .all
     @State private var isAutoRefreshEnabled = true
     @State private var filterKeyword: String?

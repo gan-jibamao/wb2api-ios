@@ -27,7 +27,7 @@ struct LoginResultCard: View {
             LabeledContent {
                 Text(Fmt.credits(result.credits))
                     .font(.body.monospacedDigit())
-                    .contentTransition(.numericText())
+                    .numericTransition(value: Fmt.credits(result.credits))
             } label: {
                 Text("积分")
             }

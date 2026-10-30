@@ -1,17 +1,28 @@
 import Foundation
-import Observation
+import Combine
 
 /// 概览页的数据与操作。
 ///
 /// 账号数据统一来自 `client.overview()`——公网 nginx 没有暴露 `/status`。
 @MainActor
-@Observable
-final class OverviewModel {
+final class OverviewModel: ObservableObject {
     private let loader = Loader<OverviewResponse>()
     private let usageLoader = Loader<UsageSnapshot>()
+    private var cancellables: Set<AnyCancellable> = []
 
-    var toast: Toast?
-    private(set) var runningBatch: BatchAction?
+    @Published var toast: Toast?
+    @Published private(set) var runningBatch: BatchAction?
+    @Published private(set) var relay = 0
+
+    init() {
+        // Loader 是独立 ObservableObject，不会自动把变更冒泡给宿主。
+        // 把它们的 objectWillChange 中继到自身，否则页面数字永远停在首帧。
+        for child in [loader.objectWillChange, usageLoader.objectWillChange] {
+            child
+                .sink { [weak self] _ in self?.objectWillChange.send() }
+                .store(in: &cancellables)
+        }
+    }
 
     var overview: OverviewResponse? { loader.value }
     /// usage 快照（今日 tokens 与用量趋势共用）

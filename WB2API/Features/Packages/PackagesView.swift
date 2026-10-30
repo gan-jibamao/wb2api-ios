@@ -2,8 +2,8 @@ import SwiftUI
 
 /// 礼包：按账号分组展示剩余 / 已用 / 总量。
 struct PackagesView: View {
-    @Environment(SessionStore.self) private var session
-    @State private var loader = Loader<PackagesResponse>()
+    @EnvironmentObject private var session: SessionStore
+    @StateObject private var loader = Loader<PackagesResponse>()
 
     private var accounts: [PackageAccount] {
         loader.value?.accounts ?? []
@@ -97,5 +97,5 @@ struct PackagesView: View {
     NavigationStack {
         PackagesView()
     }
-    .environment(SessionStore())
+    .environmentObject(SessionStore())
 }

@@ -69,7 +69,7 @@ struct QueueStatusCard: View {
                     Text(primaryCount, format: .number)
                         .font(.metric())
                         .foregroundStyle(finished ? stateTint : (running ? theme.primary : .primary))
-                        .contentTransition(.numericText())
+                        .numericTransition(value: primaryCount, format: .number)
                     Text(primaryLabel)
                         .font(.callout)
                         .foregroundStyle(.secondary)

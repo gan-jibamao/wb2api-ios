@@ -55,18 +55,65 @@ extension Font {
     static var tag: Font { .caption.weight(.medium) }
 }
 
-// MARK: - 玻璃容器（iOS 26 Liquid Glass 的统一入口）
+// MARK: - 玻璃容器（iOS 26 Liquid Glass；iOS 16-25 用等效材质回退）
 
 extension View {
     /// 常规玻璃卡片：用于内容分组。
     func glassCard(padding: CGFloat = Metrics.m, cornerRadius: CGFloat = Metrics.radiusL) -> some View {
         self
             .padding(padding)
-            .glassEffect(.regular, in: .rect(cornerRadius: cornerRadius))
+            .glassSurface(cornerRadius: cornerRadius, tint: nil, interactive: false, shape: .rect)
     }
 
     /// 可交互玻璃（按钮组、控件）：带高亮响应。
     func glassInteractive(cornerRadius: CGFloat = Metrics.radiusM) -> some View {
-        self.glassEffect(.regular.interactive(), in: .rect(cornerRadius: cornerRadius))
+        self.glassSurface(cornerRadius: cornerRadius, tint: nil, interactive: true, shape: .rect)
+    }
+}
+
+/// 玻璃形状：圆角矩形 / 胶囊。低版本回退也认这一套。
+enum GlassShapeKind {
+    case rect
+    case capsule
+}
+
+extension View {
+    /// 统一玻璃表面。iOS 26 走原生 Liquid Glass，低版本用 ultraThinMaterial + 描边近似。
+    ///
+    /// 之所以不用 `AnyShape` 抹平形状差异：`glassEffect(_:in:)` 的泛型参数 `S: Shape`
+    /// 在 iOS 26 上是独立重载，`AnyShape` 会丢类型信息导致无法匹配。两个分支各写一份最稳。
+    @ViewBuilder
+    func glassSurface(cornerRadius: CGFloat,
+                      tint: Color?,
+                      interactive: Bool,
+                      shape: GlassShapeKind = .rect) -> some View {
+        if #available(iOS 26.0, *) {
+            switch shape {
+            case .rect:
+                glassEffect(Glass.regular.applying(tint: tint, interactive: interactive),
+                            in: .rect(cornerRadius: cornerRadius))
+            case .capsule:
+                glassEffect(Glass.regular.applying(tint: tint, interactive: interactive),
+                            in: .capsule)
+            }
+        } else {
+            let fallback: AnyShape = shape == .capsule
+                ? AnyShape(Capsule())
+                : AnyShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+            background(.ultraThinMaterial, in: fallback)
+                .overlay(fallback.strokeBorder(Color.primary.opacity(0.08), lineWidth: 0.5))
+                .clipShape(fallback)
+        }
+    }
+}
+
+@available(iOS 26.0, *)
+private extension Glass {
+    /// 按需叠加 tint / interactive；顺序与原生语义一致（先 interactive 再 tint）。
+    func applying(tint: Color?, interactive: Bool) -> Glass {
+        var style = self
+        if interactive { style = style.interactive() }
+        if let tint { style = style.tint(tint) }
+        return style
     }
 }

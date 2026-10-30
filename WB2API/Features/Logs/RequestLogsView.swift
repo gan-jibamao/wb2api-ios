@@ -4,10 +4,10 @@ import SwiftUI
 struct RequestLogsView: View {
     @Environment(\.appTheme) private var theme
 
-    @Environment(SessionStore.self) private var session
+    @EnvironmentObject private var session: SessionStore
 
-    @State private var metrics = Loader<RequestMetrics>()
-    @State private var logs = Loader<JSONValue>()
+    @StateObject private var metrics = Loader<RequestMetrics>()
+    @StateObject private var logs = Loader<JSONValue>()
 
     var body: some View {
         ScrollView {
