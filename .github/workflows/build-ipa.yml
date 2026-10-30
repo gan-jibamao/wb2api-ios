@@ -1,0 +1,144 @@
+name: Build IPA
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: '分支或 tag'
+        required: false
+        default: 'ios16-downgrade'
+      skip_signing:
+        description: '产出未签名 IPA（无需证书）'
+        type: boolean
+        default: true
+  push:
+    branches: [ios16-downgrade]
+
+concurrency:
+  group: ipa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: 构建 IPA
+    runs-on: macos-15
+    timeout-minutes: 45
+
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+          fetch-depth: 0
+
+      - name: 选择 Xcode
+        run: |
+          set -e
+          # 优先挑支持 iOS 26 SDK 的 Xcode
+          for v in 26 16 15; do
+            C=$(ls -d /Applications/Xcode_${v}*.app 2>/dev/null | sort -V | tail -1)
+            [ -n "$C" ] && { echo "选用 $C"; sudo xcode-select -s "$C"; break; }
+          done
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
+
+      - name: 安装 XcodeGen
+        run: |
+          set -e
+          if ! command -v xcodegen >/dev/null; then
+            brew install xcodegen
+          fi
+          xcodegen --version
+
+      - name: 生成工程
+        run: |
+          set -e
+          xcodegen generate --spec project.yml
+          echo "--- 部署目标核对 ---"
+          grep -m1 'IPHONEOS_DEPLOYMENT_TARGET' WB2API.xcodeproj/project.pbxproj || true
+
+      - name: 编译（未签名）
+        run: |
+          set -e
+          set -o pipefail
+          xcodebuild \
+            -project WB2API.xcodeproj \
+            -scheme WB2API \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGN_ENTITLEMENTS="" \
+            DEVELOPMENT_TEAM="" \
+            PROVISIONING_PROFILE_SPECIFIER="" \
+            ENABLE_BITCODE=NO \
+            build 2>&1 | tee build.log | tail -40
+
+      - name: 收集产物
+        id: collect
+        run: |
+          set -e
+          APP=$(find build/Build/Products/Release-iphoneos -maxdepth 1 -name '*.app' -type d | head -1)
+          if [ -z "$APP" ]; then
+            echo "::error::未找到 .app 产物"
+            find build/Build/Products -maxdepth 3 -type d | head -20
+            exit 1
+          fi
+          echo "APP=$APP" >> "$GITHUB_ENV"
+          echo "app_path=$APP" >> "$GITHUB_OUTPUT"
+          echo "--- 产物 ---"
+          ls -lh "$APP" | head -20
+          echo "--- Mach-O 部署目标 ---"
+          BIN="$APP/$(/usr/libexec/PlistBuddy -c 'Print CFBundleExecutable' "$APP/Info.plist")"
+          vtool -show-build "$BIN" || true
+
+      - name: 打包 IPA
+        run: |
+          set -e
+          VERSION=$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' "$APP/Info.plist")
+          BUILD=$(/usr/libexec/PlistBuddy -c 'Print CFBundleVersion' "$APP/Info.plist")
+          NAME="WB2API-${VERSION}-${BUILD}-unsigned"
+          rm -rf Payload "$NAME.ipa" "$NAME"
+          mkdir -p Payload
+          cp -R "$APP" Payload/
+          /usr/bin/ditto -c -k --sequesterRsrc --keepParent Payload "$NAME.ipa"
+          rm -rf Payload
+          echo "IPA=$NAME.ipa" >> "$GITHUB_ENV"
+          echo "--- 包内结构 ---"
+          unzip -l "$NAME.ipa" | head -15
+          echo "--- 大小 ---"
+          ls -lh "$NAME.ipa"
+
+      - name: 上传 IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: WB2API-unsigned-ipa
+          path: ${{ env.IPA }}
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: 上传构建日志
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: 摘要
+        if: always()
+        run: |
+          {
+            echo "## 构建结果"
+            echo ""
+            echo "- 分支：\`${{ github.ref_name }}\`"
+            echo "- 提交：\`${{ github.sha }}\`"
+            echo "- Xcode：\`$(xcodebuild -version | head -1)\`"
+            echo "- IPA：\`${IPA:-未产出}\`"
+            echo "- 大小：$(ls -lh ${IPA:-/dev/null} 2>/dev/null | awk '{print $5}')"
+            echo ""
+            echo "> 未签名 IPA，安装前需自行签名。"
+          } >> "$GITHUB_STEP_SUMMARY"
