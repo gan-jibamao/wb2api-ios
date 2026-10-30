@@ -186,7 +186,10 @@ struct AccountDetailView: View {
             guard removed else { return }
             withAnimation(Motion.emphasized) {
                 isLeaving = true
-            } completion: {
+            }
+            // withAnimation(_:completion:) 的 completion 重载是 iOS 17+；
+            // 16.0 上用动画时长后置执行等价逻辑。
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
                 dismiss()
             }
         }

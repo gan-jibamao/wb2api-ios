@@ -33,29 +33,31 @@ struct LoginView: View {
     @State private var keyMessage: String?
     @State private var keyMessageIsError = false
 
+    /// 从 body 抽出：整段视图表达式过大会拖垮 Swift 类型检查（编译超时）。
+    private var regionCard: some View {
+        VStack(alignment: .leading, spacing: Metrics.m) {
+            SectionHeader(title: "登录区域", subtitle: "选择账号所属版本，授权页会跳到对应站点")
+
+            Picker("登录区域", selection: $realm) {
+                Text("国内版").tag("cn")
+                Text("国际版").tag("global")
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .accessibilityLabel("登录区域")
+
+            Label(realmHint, systemImage: realmIcon)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .glassCard()
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Metrics.l) {
-                VStack(alignment: .leading, spacing: Metrics.m) {
-                    SectionHeader(title: "登录区域", subtitle: "选择账号所属版本，授权页会跳到对应站点")
-
-                    Picker("登录区域", selection: $realm) {
-                        Text("国内版").tag("cn")
-                        Text("国际版").tag("global")
-                    }
-                    .pickerStyle(.segmented)
-                    .labelsHidden()
-                    .accessibilityLabel("登录区域")
-
-                    Label(
-                        realmHint,
-                        systemImage: realmIcon
-                    )
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .glassCard()
+                regionCard
 
                 Button(action: start) {
                     Group {
@@ -91,7 +93,7 @@ struct LoginView: View {
                         HStack(spacing: Metrics.s) {
                             Image(systemName: timedOut ? "hourglass.badge.xmark" : "hourglass")
                                 .foregroundStyle(timedOut ? Color.orange : theme.primary)
-                                .symbolEffect(.pulse, options: .repeating, isActive: !timedOut)
+                                .gcPulseSymbol(isActive: !timedOut)
                             Text(timedOut ? "授权超时" : "等待授权…")
                                 .font(.headline)
                         }

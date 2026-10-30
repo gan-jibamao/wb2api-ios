@@ -61,7 +61,7 @@ struct QueueStatusCard: View {
                     .font(.headline)
                 Spacer(minLength: Metrics.xs)
                 StatusTag(text: stateText, systemImage: stateIcon, tint: stateTint)
-                    .symbolEffect(.pulse, options: .repeating, isActive: running)
+                    .gcPulseSymbol(isActive: running)
             }
 
             VStack(alignment: .leading, spacing: 2) {

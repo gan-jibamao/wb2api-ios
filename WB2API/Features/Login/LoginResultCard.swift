@@ -11,7 +11,7 @@ struct LoginResultCard: View {
             Label("登录成功", systemImage: "checkmark.seal.fill")
                 .font(.headline)
                 .foregroundStyle(theme.primary)
-                .symbolEffect(.bounce, value: result.uid)
+                .gcSymbolEffect(.bounce, value: result.uid)
 
             LabeledContent {
                 Text(result.uid ?? "—")

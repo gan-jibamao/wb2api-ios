@@ -66,6 +66,17 @@ extension View {
 }
 
 extension View {
+    /// `fontDesign(.monospaced)` 需要 iOS 16.1+，而部署目标是 16.0。
+    /// 16.0 上退化为等宽系统字体，视觉等价。
+    @ViewBuilder
+    func monospacedTextDesign() -> some View {
+        if #available(iOS 16.1, *) {
+            fontDesign(.monospaced)
+        } else {
+            font(.system(.body, design: .monospaced))
+        }
+    }
+
     /// 等价于 iOS 17 的 `.scrollTransition(.interactive, axis:)` 淡入淡出。
     /// iOS 16 上滚动过渡 API 不存在，直接返回原视图（不影响布局与命中）。
     @ViewBuilder

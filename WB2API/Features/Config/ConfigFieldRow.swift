@@ -112,7 +112,7 @@ struct ConfigFieldRow: View {
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()
                     .multilineTextAlignment(.trailing)
-                    .fontDesign(.monospaced)
+                    .monospacedTextDesign()
                     .focused($focused)
                     .onChange(of: text) { newValue in
                         commitText(newValue)

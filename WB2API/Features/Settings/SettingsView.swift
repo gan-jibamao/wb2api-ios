@@ -68,7 +68,7 @@ struct SettingsView: View {
                     Label(testMessage, systemImage: testPassed ? "checkmark.circle.fill" : "xmark.octagon.fill")
                         .font(.footnote)
                         .foregroundStyle(testPassed ? Color.green : Color.red)
-                        .symbolEffect(.bounce, value: testPassed)
+                        .gcSymbolEffect(.bounce, value: testPassed)
                 }
             } header: {
                 Text("诊断")

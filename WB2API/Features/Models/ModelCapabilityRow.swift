@@ -10,7 +10,7 @@ struct ModelCapabilityRow: View {
         LabeledContent {
             Image(systemName: isEnabled ? "checkmark.circle.fill" : "minus.circle")
                 .foregroundStyle(isEnabled ? .green : .secondary)
-                .symbolEffect(.bounce, value: isEnabled)
+                .gcSymbolEffect(.bounce, value: isEnabled)
         } label: {
             Label(title, systemImage: systemImage)
         }

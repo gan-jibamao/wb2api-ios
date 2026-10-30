@@ -27,7 +27,7 @@ struct ModelDetailHeaderCard: View {
                     systemImage: model.isBusy ? "hourglass" : "checkmark.seal",
                     tint: model.isBusy ? .orange : .green
                 )
-                .symbolEffect(.pulse, options: .repeating, isActive: model.isBusy)
+                .gcPulseSymbol(isActive: model.isBusy)
             }
             .padding(.top, Metrics.xs)
 

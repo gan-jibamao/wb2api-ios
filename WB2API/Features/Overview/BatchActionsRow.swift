@@ -41,7 +41,7 @@ struct BatchActionsRow: View {
                         .font(.title3)
                         .foregroundStyle(theme.primary)
                         .frame(height: 22)
-                        .symbolEffect(.bounce, value: running)
+                        .gcSymbolEffect(.bounce, value: running)
                 }
 
                 Text(action.shortTitle)
