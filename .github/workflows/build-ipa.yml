@@ -6,13 +6,13 @@ on:
       ref:
         description: '分支或 tag'
         required: false
-        default: 'ios16-downgrade'
+        default: 'ios16-build40'
       skip_signing:
         description: '产出未签名 IPA（无需证书）'
         type: boolean
         default: true
   push:
-    branches: [ios16-downgrade]
+    branches: [ios16-downgrade, ios16-build40]
 
 concurrency:
   group: ipa-${{ github.ref }}
@@ -76,6 +76,45 @@ jobs:
             ENABLE_BITCODE=NO \
             build 2>&1 | tee build.log | tail -40
 
+      - name: 兼容性门禁（minos / 系统框架）
+        run: |
+          set -euo pipefail
+          APP=$(find build/Build/Products/Release-iphoneos -maxdepth 1 -name '*.app' -type d | head -1)
+          BIN="$APP/$(/usr/libexec/PlistBuddy -c 'Print CFBundleExecutable' "$APP/Info.plist")"
+          echo "binary: $BIN"
+          echo "--- linked ---"
+          xcrun otool -L "$BIN"
+
+          MINOS=$(xcrun otool -l "$BIN" | awk '/LC_BUILD_VERSION/{f=1} f&&/minos/{print $2; exit}')
+          echo "minos=$MINOS"
+          if [ "$MINOS" != "16.0" ]; then
+            echo "::error::minos 应为 16.0，实际 $MINOS"
+            exit 1
+          fi
+
+          # Symbols.framework：新 SDK 的 SwiftUI 会带上它。弱链接在 iOS 16 上会被 dyld 直接跳过，
+          # 只有「强链接」才是致命（上游官方包在 iOS 16 上 34ms 退出的原因就是这个）。
+          SYM=$(xcrun otool -L "$BIN" | grep 'Symbols.framework' || true)
+          if [ -z "$SYM" ]; then
+            echo "Symbols.framework: 未链接 ✓"
+          elif echo "$SYM" | grep -q 'weak'; then
+            echo "Symbols.framework: 弱链接 ✓（iOS 16 自动跳过）"
+          else
+            echo "::error::Symbols.framework 为强链接（iOS 16 会启动崩溃）"
+            exit 1
+          fi
+
+          # Observation 运行时是 iOS 17 才有的，必须彻底不出现或弱链接。
+          OBS=$(xcrun otool -L "$BIN" | grep 'libswiftObservation' || true)
+          if [ -z "$OBS" ]; then
+            echo "libswiftObservation: 未链接 ✓"
+          elif echo "$OBS" | grep -q 'weak'; then
+            echo "libswiftObservation: 弱链接 ✓"
+          else
+            echo "::error::仍强链接 libswiftObservation.dylib（iOS 17 独有）"
+            exit 1
+          fi
+
       - name: 收集产物
         id: collect
         run: |
@@ -110,12 +149,16 @@ jobs:
           unzip -l "$NAME.ipa" | head -15
           echo "--- 大小 ---"
           ls -lh "$NAME.ipa"
+          echo "--- sha256 ---"
+          shasum -a 256 "$NAME.ipa" | tee "$NAME.ipa.sha256"
 
       - name: 上传 IPA
         uses: actions/upload-artifact@v4
         with:
           name: WB2API-unsigned-ipa
-          path: ${{ env.IPA }}
+          path: |
+            ${{ env.IPA }}
+            ${{ env.IPA }}.sha256
           retention-days: 30
           if-no-files-found: error
 
