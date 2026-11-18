@@ -24,7 +24,7 @@ struct AccountDetailView: View {
 
         ScrollView {
             LazyVStack(alignment: .leading, spacing: Metrics.m) {
-                if current.needsLogin {
+                if current.needsLogin && !IgnoredWarnings.isIgnored(current.uid) {
                     actionBanner(current)
                         .staggeredAppear(index: 0)
                 }
